@@ -9,6 +9,4 @@ public class character {
 	String[] pants = { "lt_blue", "dk_blue", "black", "white", "brown" };
 	String[] gender = { "xx", "xy" };
 	
-	
-	
 }
