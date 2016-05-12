@@ -7,7 +7,12 @@ public class game extends Canvas implements Runnable{
 	
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
-	final String TITLE = "MMO";
+	public final String TITLE = "MMO";
+	private boolean running = false;
+	private thread th;
+	
+	private BufferedImage images = new BufferedImage(WIDTH,HEIGHT,BufferedImage.TYPE_INT_RGB);
+	
 	
 	public void run(){
 		init();
