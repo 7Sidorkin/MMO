@@ -23,15 +23,6 @@ public class MouseInput implements MouseListener {
 				}
 			}
 		}
-		if (Game.State == Game.STATE.GAMEOVER) {
-			// Quit Button
-			if (mx >= 286 && mx <= 486) {
-				if (my >= 600 && my <= 700) {
-					// Pressed Quit Button
-					System.exit(1);
-				}
-			}
-		}
 		if (Game.State == Game.STATE.MENU) {
 			// Quit Button
 			if (mx >= 286 && mx <= 486) {
@@ -59,7 +50,7 @@ public class MouseInput implements MouseListener {
 				}
 			}
 		}
-		if (Game.State == Game.STATE.HELP) {
+		if (Game.State == Game.STATE.CONTROLS) {
 			// Back Button
 			if (mx >= 286 && mx <= 486) {
 				if (my >= 630 && my <= 730) {
@@ -79,7 +70,6 @@ public class MouseInput implements MouseListener {
 				}
 			}
 		}
-	}
 	public void mouseReleased(MouseEvent arg0) {
 	}
 }
