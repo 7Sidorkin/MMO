@@ -67,7 +67,6 @@ public class game extends Canvas implements Runnable{
 				//Starts the instance
 				//game.start();
 		
-
 	}
 
 }
