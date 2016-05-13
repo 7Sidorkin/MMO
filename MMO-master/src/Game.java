@@ -156,8 +156,11 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		// TODO Auto-generated method stub
-		System.out.println("hi");
+		if(game.State == State.CONTROLS){
+			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
+				game.State = State.MENU;
+			}
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
