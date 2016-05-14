@@ -1,5 +1,5 @@
 import java.awt.Color;
-import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -21,6 +21,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public static Controls controls;
 	public static Game game;
 	public Rectangle mouse;
+	public Player player;
 
 	public int mouseX, mouseY;
 
@@ -48,7 +49,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		renderer = new Renderer();
 		controls = new Controls();
 		mouse = new Rectangle();
-
+		player = new Player();
 	}
 
 	private synchronized void start() {
@@ -107,10 +108,11 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
 	private void tick() {
 		renderer.repaint();
+		game.player.update();
 
 	}
 
-	static void render(Graphics g) {
+	static void render(Graphics2D g) {
 		if (game.State == State.MENU) {
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, WIDTH, HEIGHT);
@@ -118,6 +120,9 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		}
 		if(game.State == State.CONTROLS){
 			controls.render(g);
+		}
+		if(game.State == State.GAME){
+			game.player.render(g);
 		}
 	}
 
@@ -161,10 +166,15 @@ public class Game implements Runnable, KeyListener, MouseListener {
 				game.State = State.MENU;
 			}
 		}
+		if(game.State == State.GAME){
+			game.player.control(e, true);
+		}
 	}
 
 	public void keyReleased(KeyEvent e) {
-		// TODO Auto-generated method stub
+		if(game.State == State.GAME){
+			game.player.control(e, false);
+		}
 
 	}
 
