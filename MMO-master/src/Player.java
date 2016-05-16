@@ -22,7 +22,7 @@ public class Player  {
 	public int cool2 = 100000;//cooldown time in milliseconds for the ability
 	public long tack1Start = -cool1, tack2Start = -cool2;
 	
-	public int speed = 10;
+	public int speed = 4;
 
 	public int pointing = 0; // 0 = Straight at top of screen
 
@@ -73,7 +73,7 @@ public class Player  {
 
 	}
 
-	public void update() {
+	public void tick() {
 		at = AffineTransform.getRotateInstance(Math.toRadians(pointing), x + 16, y + 16);
 		front.setLocation(x, y);
 		back.setLocation(x, y + 31);
@@ -150,7 +150,7 @@ public class Player  {
 					x--;
 				}
 			}
-			if(e.getKeyCode() == KeyEvent.VK_COMMA){
+			if(e.getKeyCode() == KeyEvent.VK_CAPS_LOCK){
 				if(System.currentTimeMillis() - tack1Start > cool1){
 					tack1Start = System.currentTimeMillis();
 					attack();
@@ -159,10 +159,10 @@ public class Player  {
 			
 			
 			if (e.getKeyCode() == KeyEvent.VK_E) {
-				rotationSpeed = 2;
+				rotationSpeed = 4;
 			}
 			if (e.getKeyCode() == KeyEvent.VK_Q) {
-				rotationSpeed = -2;
+				rotationSpeed = -4;
 			}
 		}
 		if (!pressed) {
@@ -192,7 +192,16 @@ public class Player  {
 		if(this.type == PLAYERTYPE.ARCHER){
 			Projectile arrow1 = new Projectile(x, y, ID.Arrow);
 			Game.game.handler.addObject(arrow1);
+			System.out.println("shoot");
+		}
+		if(this.type == PLAYERTYPE.MAGE){
+			Projectile magic1 = new Projectile(x, y, ID.magic);
+			Game.game.handler.addObject(magic1);
+			System.out.println("shoot");
 		}
 		}
+	
+	public void setPlayerType(PLAYERTYPE type){
+		this.type = type;
 	}
-
+	}
