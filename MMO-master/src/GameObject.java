@@ -1,8 +1,10 @@
+import java.awt.Graphics;
+
 
 public abstract class GameObject {
 	protected int x, y;
 	protected ID id;
-	protected int velX, velY;
+	public int motionX, motionY;
 	
 	public GameObject(int x, int y, ID id){
 		this.x = x;
@@ -11,7 +13,6 @@ public abstract class GameObject {
 	}
 
 	public abstract void tick();
-	public abstract void render(Graphics g);
 	
 	public void setX(int x ){
 		this.x = x;
@@ -34,17 +35,22 @@ public abstract class GameObject {
 	public ID getID(){
 		return id;
 	}
-	public void setVelX(int velX){
-		this.velX = velX;
+	public void setmotionX(int motionX){
+		this.motionX = motionX;
 	}
-	public void setVelY(int velY){
-		this.velY = velY;
+	public void setmotionY(int motionY){
+		this.motionY = motionY;
 	}
-	public int getVelX(){
-		return velX;
+	public int getmotionX(){
+		return motionX;
 	}
-	public int getVelY(){
-		return velY;
+	public int getmotionY(){
+		return motionY;
+	}
+
+	public void render(Graphics g) {
+		
+		
 	}
 	
 	
