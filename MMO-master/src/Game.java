@@ -6,6 +6,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.PrintWriter;
 
 import javax.swing.JFrame;
 
@@ -22,7 +23,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public static Game game;
 	public Rectangle mouse;
 	public Player player;
-
+	static PrintWriter writer;
+	public Handler handler;
 	public int mouseX, mouseY;
 
 	private BufferedImage images = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
@@ -49,7 +51,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		renderer = new Renderer();
 		controls = new Controls();
 		mouse = new Rectangle();
-		player = new Player();
+		player = new Player(Player.PLAYERTYPE.ARCHER);
+		handler = new Handler();
 	}
 
 	private synchronized void start() {
@@ -109,6 +112,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	private void tick() {
 		renderer.repaint();
 		game.player.update();
+		game.handler.tick();
 
 	}
 
@@ -123,10 +127,22 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		}
 		if(game.State == State.GAME){
 			game.player.render(g);
+			game.handler.render(g);
 		}
 	}
 
 	public static void main(String[] args) {
+		
+//	File file = new File ("./test.txt");
+//	try {
+//		writer = new PrintWriter(file);
+//	} catch (FileNotFoundException e) {
+//		// TODO Auto-generated catch block
+//		e.printStackTrace();
+//	}
+//	writer.println("test");
+	
+	
 		// Creates new instance of Game
 
 		game = new Game();
