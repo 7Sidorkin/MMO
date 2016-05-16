@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.event.KeyEvent;
@@ -33,6 +34,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	static PrintWriter writer;
 	public Handler handler;
 	public int mouseX, mouseY;
+	public static int winner;
 
 	private BufferedImage images = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
@@ -59,7 +61,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		mouse = new Rectangle();
 		player1 = new Player(Player.PLAYERTYPE.MAGE, 1);
 		player2 = new Player(Player.PLAYERTYPE.ARCHER, 2);
-		player = new Player(Player.PLAYERTYPE.MAGE);
+		//player = new Player(Player.PLAYERTYPE.MAGE);
 		handler = new Handler();
 		character = new Character();
 		createFaction = new CharacterFaction();
@@ -129,8 +131,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		game.player1.tick();
 		game.player2.tick();
 		handler.tick();
-		System.out.println(Game.State); //please remove
-
 	}
 
 	static void render(Graphics2D g) {
@@ -154,7 +154,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			Game.createFaction.render(g);
 		}
 		if(game.State == State.WIN){
-			g.setFont(new Font("TubeOfCorn", Font.PLAIN, 93));
+			g.setFont(new Font("Minecraft", Font.PLAIN, 93));
 			g.setColor(Color.BLACK);
 			g.drawString("Player" + game.winner + " WINS", 0, 100);
 		}
@@ -206,14 +206,14 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		if(Game.State == STATE.CONTROLS  || game.State == State.WIN){
+		if(Game.State == STATE.CONTROLS  || game.State == STATE.WIN){
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 				Game.State = STATE.MENU;
 			}
 		}
 		if(Game.State == STATE.GAME){
-			game.player1.control(e, True);
-			game.player2.control(e, True);
+			game.player1.control(e, true);
+			game.player2.control(e, true);
 		}
 	}
 
@@ -230,7 +230,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		mouseX = e.getX();
 		mouseY = e.getY();
 		mouse.setBounds(e.getX(), e.getY(), 1, 1);
-		if (Game.State == STATE.MENU) {
+	
 			if (menu.playButton.contains(mouse)) {
 				player1.health = 100;
 				player2.health = 100;
@@ -250,43 +250,20 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			if (menu.helpButton.contains(mouse)) {
 				Game.State = STATE.CONTROLS;
 			}
-			if (menu.characterMenu.contains(mouse)){
-				Game.State = STATE.CHARACTER;
-			}
 			if (character.createCharacter.contains(mouse)){
 				Game.State = STATE.CHARACTER_FACTION;
 				System.out.println("Running state: CharacterCreate_FACTION");
 			}
-		}
+		
 	}
-
-	@Override
 	public void mouseEntered(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
-
-	@Override
 	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
-
-	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-
 	}
-
-	@Override
 	public void mouseReleased(MouseEvent e) {
-
 	}
-
-	@Override
 	public void keyTyped(KeyEvent e) {
-		// TODO Auto-generated method stub
-
 	}
-
 }
