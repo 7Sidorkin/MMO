@@ -1,5 +1,3 @@
-
-
 import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Font;
@@ -14,10 +12,10 @@ public class Menu {
 		public Rectangle helpButton = new Rectangle(550, 350, 200, 80);
 		public Rectangle quitButton = new Rectangle(550, 450, 200, 80);
 		public Rectangle characterMenu = new Rectangle(420, 550, 470, 80);
-		public static BufferedImage background;
+		public BufferedImage background;
 	
 		public Menu(){
-			background = Imageloader.imageLoader("./menuBackground.jpg");
+			background = imageLoader.imageLoader("./menuBackground.jpg");
 		}
 		
 	public void render(Graphics g){
@@ -36,11 +34,11 @@ public class Menu {
 		g.drawString("Play", 570, 300);
 		g.drawString("Help", 570, 400);
 		g.drawString("Quit", 570, 500);
-		g.drawString("Character Creation", 440,600);
+		//g.drawString("Character Creation", 440,600);
 		g2d.setStroke(new BasicStroke(3));
 		g2d.draw(playButton);
 		g2d.draw(helpButton);
 		g2d.draw(quitButton);
-		g2d.draw(characterMenu);  
+		//g2d.draw(characterMenu);  
  	}
 }
