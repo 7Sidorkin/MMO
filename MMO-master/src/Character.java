@@ -8,11 +8,11 @@ import java.util.Scanner;
 
 //Character selection.
 public class Character {
-	String[] faction = { "blackguard", "moonshadow" };
-	String[] classes = { "mage", "archer", "warrior" };
+	static String[] factions = { "blackguard", "moonshadow" };
+	static String[] classes = { "mage", "archer", "warrior" };
 	//Each character must have the following:
 	static String chosenFaction;
-
+	
 	public static void main(String[] args) throws IOException {
 		String name;
 		Scanner scanner = new Scanner(System.in);
@@ -29,23 +29,22 @@ public class Character {
 			String retrievedName = new String(Files.readAllBytes(Paths.get(flPath)));
 			String retrievedClass = new String(Files.readAllBytes(Paths.get(classPath)));
 			String retrievedFaction = new String(Files.readAllBytes(Paths.get(factionPath)));
-			System.out.println();
 			System.out.println("Character Stats:");
-			System.out.println("Name:" + retrievedName);
-			System.out.println("Class:" + retrievedClass);
-			System.out.println("Faction" + retrievedFaction);
+			System.out.println("Name: " + retrievedName);
+			System.out.println("Class: " + retrievedClass);
+			System.out.println("Faction: " + retrievedFaction);
 			break;
 		case "CREATE":
 			String raceClass;
 			System.out.println("Name:");
 		    name = scanner.nextLine();
 		    String writeFLPath = "T:/CEN-ICS3U1-1/COMMON/MMORPG/characters/" + name + "/" + "fl.txt";
-			System.out.println("Faction: ");
+			System.out.println("Enter Faction: ");
 			chosenFaction = scanner.nextLine().toLowerCase();
 			String writeFCPath = "T:/CEN-ICS3U1-1/COMMON/MMORPG/characters/" + name + "/" + "faction.txt";
 			System.out.println("Class: ");
 			String writeCPath = "T:/CEN-ICS3U1-1/COMMON/MMORPG/characters/" + name + "/" + "class.txt";
-			raceClass = scanner.nextLine();
+			raceClass = scanner.nextLine().toLowerCase();
 			System.out.println(name + "\n" + chosenFaction + "\n" + raceClass);
 			scanner.close();
 			
@@ -66,7 +65,7 @@ public class Character {
 			writer.close();
 			writer2.close();
 			writer3.close();
-			System.out.println("You have created the character " + name + "in faction " + chosenFaction + "\nand class " + raceClass);
+			System.out.println("You have created the character " + name + " in faction " + chosenFaction + " and class " + raceClass);
 			if(flFile.exists() && !flFile.isDirectory()) { System.out.println("Stored bytes\n"); }
 			break;
 		}
