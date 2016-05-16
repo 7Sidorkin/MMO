@@ -1,4 +1,11 @@
-package _character;
+
+
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.Rectangle;
+import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,9 +17,25 @@ import java.util.Scanner;
 public class Character {
 	static String[] factions = { "blackguard", "moonshadow" };
 	static String[] classes = { "mage", "archer", "warrior" };
+	public Rectangle createCharacter = new Rectangle(70, 270, 450, 100);
+	public Rectangle selectCharacter = new Rectangle(750, 270, 450, 100);
 	//Each character must have the following:
 	static String chosenFaction;
-	
+	public BufferedImage background;
+	public void render(Graphics g) {
+		Graphics2D g2d = (Graphics2D) g; //Initialize the 2D Graphics renderer.
+		FontLoader.loadFont("./TubeOfCorn.ttf");
+		background = imageLoader.imageLoader("./menuBackground.png");
+		g.drawImage(background, 0, 0, Game.WIDTH, Game.HEIGHT, null);
+		Font currentFont = new Font("TubeOfCorn",Font.PLAIN, 93);
+		g.setFont(currentFont);
+		g.setColor(Color.WHITE);
+		g.drawString("CREATE", 100, 350);
+		g.drawString("SELECT", 800, 350);
+		g2d.draw(createCharacter);
+		g2d.draw(selectCharacter);
+		
+	}
 	public static void main(String[] args) throws IOException {
 		String name;
 		Scanner scanner = new Scanner(System.in);

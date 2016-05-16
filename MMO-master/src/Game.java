@@ -20,6 +20,12 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public static Renderer renderer;
 	public static Menu menu;
 	public static Controls controls;
+	public static Character character;
+	
+	public static CharacterFaction createFaction;
+	public static CharacterClass createClass;
+	public static CharacterFinal createFinal;
+	
 	public static Game game;
 	public Rectangle mouse;
 	public Player player;
@@ -30,7 +36,15 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	private BufferedImage images = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
 	public static enum STATE {
-		MENU, GAME, PAUSE, CONTROLS, CHARACTER,
+		MENU,
+		GAME,
+		PAUSE,
+		CONTROLS,
+		CHARACTER,
+		CHARACTER_FACTION,
+		CHARACTERCREATE_CLASS,
+		CHARACTERCREATE_NAME,
+		CHARACTERSELECT
 	};
 
 	public static STATE State = STATE.MENU;
@@ -43,6 +57,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		mouse = new Rectangle();
 		player = new Player(Player.PLAYERTYPE.MAGE);
 		handler = new Handler();
+		character = new Character();
+		createFaction = new CharacterFaction();
+		createClass = new CharacterClass();
+		createFinal = new CharacterFinal();
 	}
 	
 	public Game(){
@@ -106,21 +124,28 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		renderer.repaint();
 		game.player.tick();
 		handler.tick();
+		System.out.println(Game.State); //please remove
 
 	}
 
 	static void render(Graphics2D g) {
-		if (game.State == State.MENU) {
+		if (Game.State == STATE.MENU) {
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			menu.render(g);
 		}
-		if(game.State == State.CONTROLS){
+		if(Game.State == STATE.CONTROLS){
 			controls.render(g);
 		}
-		if(game.State == State.GAME){
+		if(Game.State == STATE.GAME){
 			game.player.render(g);
 			game.handler.render(g);
+		}
+		if(Game.State == STATE.CHARACTER) {
+			Game.character.render(g);
+		}
+		if(Game.State == STATE.CHARACTER_FACTION) {
+			Game.createFaction.render(g);
 		}
 	}
 
@@ -170,18 +195,18 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		if(game.State == State.CONTROLS){
+		if(Game.State == STATE.CONTROLS){
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
-				game.State = State.MENU;
+				Game.State = STATE.MENU;
 			}
 		}
-		if(game.State == State.GAME){
+		if(Game.State == STATE.GAME){
 			game.player.control(e, true);
 		}
 	}
 
 	public void keyReleased(KeyEvent e) {
-		if(game.State == State.GAME){
+		if(Game.State == STATE.GAME){
 			game.player.control(e, false);
 		}
 
@@ -192,18 +217,22 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		mouseX = e.getX();
 		mouseY = e.getY();
 		mouse.setBounds(e.getX(), e.getY(), 1, 1);
-		if (game.State == State.MENU) {
+		if (Game.State == STATE.MENU) {
 			if (menu.playButton.contains(mouse)) {
-				game.State = State.GAME;
+				Game.State = STATE.CHARACTER;
 			}
 			if (menu.quitButton.contains(mouse)) {
 				System.exit(1);
 			}
 			if (menu.helpButton.contains(mouse)) {
-				game.State = State.CONTROLS;
+				Game.State = STATE.CONTROLS;
 			}
 			if (menu.characterMenu.contains(mouse)){
-				game.State = State.CHARACTER;
+				Game.State = STATE.CHARACTER;
+			}
+			if (character.createCharacter.contains(mouse)){
+				Game.State = STATE.CHARACTER_FACTION;
+				System.out.println("Running state: CharacterCreate_FACTION");
 			}
 		}
 	}
