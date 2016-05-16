@@ -5,14 +5,23 @@ import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
 
-public class Player {
+public class Player  {
 
+	public static enum PLAYERTYPE {
+		MAGE, HEAVY, ARCHER,I_HAVE_LITERALLY_NO_IDEA_OTHER_CLASSES,
+	};
+	
+	
 	public int x = 100, y = 100, motionX, motionY, width = 32, height = 32;
 
 	public int rotationSpeed = 0;
 
 	public AffineTransform at;
-
+	
+	public int cool1 = 1000; //cooldown time in milliseconds for main attack
+	public int cool2 = 100000;//cooldown time in milliseconds for the ability
+	public long tack1Start = -cool1, tack2Start = -cool2;
+	
 	public int speed = 10;
 
 	public int pointing = 0; // 0 = Straight at top of screen
@@ -23,7 +32,9 @@ public class Player {
 
 	public Rectangle screenTop, screenBottom, screenLeft, screenRight;
 
-	public Player() {
+	public static PLAYERTYPE type;
+	
+	public Player(PLAYERTYPE p) {
 		front = new Rectangle(x, y, 32, 1);
 		back = new Rectangle(x, y + 31, 32, 1);
 		left = new Rectangle(x, y, 1, 32);
@@ -45,16 +56,17 @@ public class Player {
 		screenBottom = new Rectangle(0, 720, 1280, 1);
 		screenLeft = new Rectangle(0, 0, 1, 720);
 		screenRight = new Rectangle(1280, 0, 1, 720);
+		type = p;
 	}
 
 	public void render(Graphics2D g) {
 		g.setColor(Color.black);
 		g.drawLine(0, 20, 1280, 20);
 		// g.drawRect(x, y, 32, 32);
-		g.rotate(Math.toRadians(pointing), x + 16, y + 16);
-		g.draw(player);
+		//g.rotate(Math.toRadians(pointing), x + 16, y + 16);
+		g.draw(playerS);
 		g.setColor(Color.red);
-		g.draw(front);
+		g.draw(frontS);
 		if (frontS.intersects(screenTop)) {
 			System.out.println("yay");
 		}
@@ -138,6 +150,14 @@ public class Player {
 					x--;
 				}
 			}
+			if(e.getKeyCode() == KeyEvent.VK_COMMA){
+				if(System.currentTimeMillis() - tack1Start > cool1){
+					tack1Start = System.currentTimeMillis();
+					attack();
+				}
+			}
+			
+			
 			if (e.getKeyCode() == KeyEvent.VK_E) {
 				rotationSpeed = 2;
 			}
@@ -166,4 +186,13 @@ public class Player {
 			}
 		}
 	}
-}
+	
+	
+	public void attack(){
+		if(this.type == PLAYERTYPE.ARCHER){
+			Projectile arrow1 = new Projectile(x, y, ID.Arrow);
+			Game.game.handler.addObject(arrow1);
+		}
+		}
+	}
+
