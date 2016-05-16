@@ -38,23 +38,16 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	///////////////////////////////////////////////////////////////////////////
 
 	public void init() {
-		// requestFocus();
-		// imageLoader loader = new imageLoader();
-		// add all images here by going
-		// "image name" = loader.loadImage("/nameoffile.png");
-		// addKeyListener(new KeyInput(this));
-		// this.addMouseListener(new MouseInput());
-	}
-
-	public Game() {
 		menu = new Menu();
-		renderer = new Renderer();
 		controls = new Controls();
 		mouse = new Rectangle();
-		player = new Player(Player.PLAYERTYPE.ARCHER);
+		player = new Player(Player.PLAYERTYPE.MAGE);
 		handler = new Handler();
 	}
-
+	
+	public Game(){
+		renderer = new Renderer();
+	}
 	private synchronized void start() {
 		// If the program is already running then do nothing but if not running,
 		// make it run and start the thread
@@ -111,8 +104,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
 	private void tick() {
 		renderer.repaint();
-		game.player.update();
-		game.handler.tick();
+		game.player.tick();
+		handler.tick();
 
 	}
 
