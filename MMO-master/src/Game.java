@@ -17,6 +17,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public final String TITLE = "MMO";
 	private boolean running = false;
 	private Thread th;
+	public Player player1, player2;
 	public static Renderer renderer;
 	public static Menu menu;
 	public static Controls controls;
@@ -44,7 +45,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		CHARACTER_FACTION,
 		CHARACTERCREATE_CLASS,
 		CHARACTERCREATE_NAME,
-		CHARACTERSELECT
+		CHARACTERSELECT,
+		WIN
 	};
 
 	public static STATE State = STATE.MENU;
@@ -55,6 +57,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		menu = new Menu();
 		controls = new Controls();
 		mouse = new Rectangle();
+		player1 = new Player(Player.PLAYERTYPE.MAGE, 1);
+		player2 = new Player(Player.PLAYERTYPE.ARCHER, 2);
 		player = new Player(Player.PLAYERTYPE.MAGE);
 		handler = new Handler();
 		character = new Character();
@@ -122,7 +126,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
 	private void tick() {
 		renderer.repaint();
-		game.player.tick();
+		game.player1.tick();
+		game.player2.tick();
 		handler.tick();
 		System.out.println(Game.State); //please remove
 
@@ -138,7 +143,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			controls.render(g);
 		}
 		if(Game.State == STATE.GAME){
-			game.player.render(g);
+			game.player1.render(g);
+			game.player2.render(g);
 			game.handler.render(g);
 		}
 		if(Game.State == STATE.CHARACTER) {
@@ -146,6 +152,11 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		}
 		if(Game.State == STATE.CHARACTER_FACTION) {
 			Game.createFaction.render(g);
+		}
+		if(game.State == State.WIN){
+			g.setFont(new Font("TubeOfCorn", Font.PLAIN, 93));
+			g.setColor(Color.BLACK);
+			g.drawString("Player" + game.winner + " WINS", 0, 100);
 		}
 	}
 
@@ -195,19 +206,21 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		if(Game.State == STATE.CONTROLS){
+		if(Game.State == STATE.CONTROLS  || game.State == State.WIN){
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 				Game.State = STATE.MENU;
 			}
 		}
 		if(Game.State == STATE.GAME){
-			game.player.control(e, true);
+			game.player1.control(e, True);
+			game.player2.control(e, True);
 		}
 	}
 
 	public void keyReleased(KeyEvent e) {
 		if(Game.State == STATE.GAME){
-			game.player.control(e, false);
+			game.player1.control(e, false);
+			game.player2.control(e, false);
 		}
 
 	}
@@ -219,6 +232,16 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		mouse.setBounds(e.getX(), e.getY(), 1, 1);
 		if (Game.State == STATE.MENU) {
 			if (menu.playButton.contains(mouse)) {
+				player1.health = 100;
+				player2.health = 100;
+				player1.x = 100;
+				player2.x = 700;
+				player1.y = 100;
+				player2.y = 100;
+
+				player1.pointing = 0;
+				player2.pointing = 0;
+
 				Game.State = STATE.CHARACTER;
 			}
 			if (menu.quitButton.contains(mouse)) {
