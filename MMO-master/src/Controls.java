@@ -7,11 +7,11 @@ public class Controls {
 	public BufferedImage controlsBack;
 	Controls(){
 		controls = imageLoader.imageLoader("./keyboardControls.png");
-		controlsBack = imageLoader.imageLoader("./menuBackground.jpg");
+		controlsBack = imageLoader.imageLoader("./menuBackground.png");
 	}
 
 	public void render(Graphics g){
 		g.drawImage(controlsBack, 0, 0, Game.WIDTH, Game.HEIGHT, null);
-		g.drawImage(controls, 40, 40, 1200, 640, null);
+		g.drawImage(controls, 100, 100, 1000, 400, null);
 	}
 }

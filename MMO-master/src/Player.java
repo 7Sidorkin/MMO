@@ -79,10 +79,10 @@ public class Player {
 		}
 		if(this.health <= 0){
 			if(this.playerNum == 1){
-				Game.game.winner = 2;
+				Game.winner = 2;
 			}
 			if(this.playerNum == 2){
-				Game.game.winner = 1;
+				Game.winner = 1;
 			}
 			Game.State = Game.STATE.WIN;
 		}
@@ -192,17 +192,17 @@ public class Player {
 						x--;
 					}
 				}
-				if (e.getKeyCode() == KeyEvent.VK_CAPS_LOCK) {
+				if (e.getKeyCode() == KeyEvent.VK_V) {
 					if (System.currentTimeMillis() - tack1Start > cool1) {
 						tack1Start = System.currentTimeMillis();
 						attack();
 					}
 				}
 
-				if (e.getKeyCode() == KeyEvent.VK_E) {
+				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 					rotationSpeed = 4;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_Q) {
+				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
 					rotationSpeed = -4;
 				}
 			}
@@ -219,23 +219,23 @@ public class Player {
 				if (e.getKeyCode() == KeyEvent.VK_D) {
 					motionX = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_E) {
+				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
 					rotationSpeed = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_Q) {
+				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
 					rotationSpeed = 0;
 				}
 			}
 		}else{
 			if (pressed) {
-				if (e.getKeyCode() == KeyEvent.VK_UP) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
 					motionY = -speed;
 					if (playerB.getY() - speed - 20 < 0) {
 						motionY = 0;
 						y++;
 					}
 				}
-				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD5) {
 					motionY = speed;
 					if (playerB.getY() + speed + 20 + playerB.getHeight() > 720) {
 						motionY = 0;
@@ -243,7 +243,7 @@ public class Player {
 					}
 
 				}
-				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
 					motionX = -speed;
 					if (playerB.getX() - speed - 20 < 0) {
 						motionX = 0;
@@ -251,7 +251,7 @@ public class Player {
 					}
 
 				}
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
 					motionX = speed;
 					if (playerB.getX() + speed + 20 + playerB.getWidth() > 1280) {
 						motionX = 0;
@@ -265,30 +265,30 @@ public class Player {
 					}
 				}
 
-				if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
 					rotationSpeed = 4;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
 					rotationSpeed = -4;
 				}
 			}
 			if (!pressed) {
-				if (e.getKeyCode() == KeyEvent.VK_UP) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
 					motionY = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD5) {
 					motionY = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
 					motionX = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
 					motionX = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_PAGE_DOWN) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
 					rotationSpeed = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
 					rotationSpeed = 0;
 				}
 			}
@@ -299,12 +299,12 @@ public class Player {
 		if (this.type == PLAYERTYPE.ARCHER) {
 			Projectile arrow1 = new Projectile(x, y, ID.Arrow, this);
 			Game.game.handler.addObject(arrow1);
-			System.out.println("shoot");
+		
 		}
 		if (this.type == PLAYERTYPE.MAGE) {
 			Projectile magic1 = new Projectile(x, y, ID.magic, this);
 			Game.game.handler.addObject(magic1);
-			System.out.println("shoot");
+		
 		}
 	}
 

@@ -1,5 +1,3 @@
-
-
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
@@ -22,16 +20,22 @@ public class Character {
 	//Each character must have the following:
 	static String chosenFaction;
 	public BufferedImage background;
+	
+	
 	public void render(Graphics g) {
 		Graphics2D g2d = (Graphics2D) g; //Initialize the 2D Graphics renderer.
-		FontLoader.loadFont("./TubeOfCorn.ttf");
+		FontLoader.loadFont("./Minecraft.ttf");
 		background = imageLoader.imageLoader("./menuBackground.png");
 		g.drawImage(background, 0, 0, Game.WIDTH, Game.HEIGHT, null);
-		Font currentFont = new Font("TubeOfCorn",Font.PLAIN, 93);
+		Font currentFont = new Font("Minecraft",Font.PLAIN, 93);
 		g.setFont(currentFont);
+		g.setColor(Color.GRAY);
+		g.fillRect(70, 270, 450, 100);
+		g.fillRect(750, 270, 450, 100);
 		g.setColor(Color.WHITE);
 		g.drawString("CREATE", 100, 350);
 		g.drawString("SELECT", 800, 350);
+		g.setColor(Color.BLACK);
 		g2d.draw(createCharacter);
 		g2d.draw(selectCharacter);
 		

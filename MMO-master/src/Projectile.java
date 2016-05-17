@@ -12,9 +12,13 @@ public class Projectile extends GameObject {
 		this.motionX = (int) (speed* Math.cos(Math.toRadians(player.pointing - 90)));
 		this.motionY = (int) (speed* Math.sin(Math.toRadians(player.pointing - 90)));
 		this.arrow = new Rectangle(x, y, 5,5);
+		System.out.println("shoot");
+		this.x += this.motionX;
+		this.x += this.motionX;
+		this.y += this.motionY;
+		this.y += this.motionY;
 	}
 
-	@Override
 	public void tick() {
 		this.x += this.motionX;
 		this.y += this.motionY;
@@ -34,7 +38,6 @@ public class Projectile extends GameObject {
 		
 	}
 
-	@Override
 	public void render(Graphics g) {
 		g.drawRect(this.x, this.y, 5, 5);
 	}

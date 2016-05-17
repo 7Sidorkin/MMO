@@ -153,7 +153,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		if(Game.State == STATE.CHARACTER_FACTION) {
 			Game.createFaction.render(g);
 		}
-		if(game.State == State.WIN){
+		if(game.State == STATE.WIN){
 			g.setFont(new Font("Minecraft", Font.PLAIN, 93));
 			g.setColor(Color.BLACK);
 			g.drawString("Player" + game.winner + " WINS", 0, 100);
@@ -254,7 +254,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 				Game.State = STATE.CHARACTER_FACTION;
 				System.out.println("Running state: CharacterCreate_FACTION");
 			}
-		
+			
 	}
 	public void mouseEntered(MouseEvent e) {
 	}
