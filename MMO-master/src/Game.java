@@ -229,7 +229,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		mouseX = e.getX();
 		mouseY = e.getY();
 		mouse.setBounds(e.getX(), e.getY(), 1, 1);
-	
+		if(Game.State == STATE.MENU) {
 			if (menu.playButton.contains(mouse)) {
 				player1.health = 100;
 				player2.health = 100;
@@ -249,11 +249,14 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			if (menu.helpButton.contains(mouse)) {
 				Game.State = STATE.CONTROLS;
 			}
+			
+		}
+		if(Game.State == STATE.CHARACTER) {
 			if (character.createCharacter.contains(mouse)){
 				Game.State = STATE.CHARACTER_FACTION;
 				System.out.println("Running state: CharacterCreate_FACTION");
 			}
-			
+		}
 	}
 	public void mouseEntered(MouseEvent e) {
 	}
