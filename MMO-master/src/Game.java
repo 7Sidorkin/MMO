@@ -225,7 +225,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
 	}
 
-	@Override
 	public void mouseClicked(MouseEvent e) {
 		mouseX = e.getX();
 		mouseY = e.getY();
