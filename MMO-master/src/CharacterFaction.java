@@ -17,6 +17,6 @@ public class CharacterFaction {
 		g.drawImage(background, 0, 0, Game.WIDTH, Game.HEIGHT, null);
 		g.drawImage(moonshadow, 600, 100, 600, 410, null);
 		g.drawImage(blackguard, 50, 125, 800, 410, null);
-	
+		System.out.println(Game.State);
 	}
 }
