@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 import java.awt.Shape;
@@ -34,7 +35,7 @@ public class Player {
 
 	public Rectangle screenTop, screenBottom, screenLeft, screenRight;
 
-	public static PLAYERTYPE type;
+	public PLAYERTYPE type;
 
 	public Player(PLAYERTYPE p, int playerNumber) {
 		this.playerNum = playerNumber;
@@ -63,7 +64,7 @@ public class Player {
 		screenBottom = new Rectangle(0, 720, 1280, 1);
 		screenLeft = new Rectangle(0, 0, 1, 720);
 		screenRight = new Rectangle(1280, 0, 1, 720);
-		type = p;
+		this.type = p;
 	}
 
 	public void render(Graphics2D g) {
@@ -86,6 +87,18 @@ public class Player {
 			}
 			Game.State = Game.STATE.WIN;
 		}
+		if(this.type == PLAYERTYPE.HEAVY){
+			g.setColor(Color.MAGENTA);
+			g.fill(this.playerS);
+		}else if(this.type == PLAYERTYPE.MAGE){
+			g.setColor(Color.GREEN);
+			g.fill(this.playerS);
+		}else if(this.type == PLAYERTYPE.ARCHER){
+			g.setColor(Color.BLUE);
+			g.fill(this.playerS);
+		}
+		g.setFont(new Font("Minecraft",Font.PLAIN, 10));
+		g.drawString(""+ health, x, y);
 
 	}
 
@@ -265,7 +278,7 @@ public class Player {
 					}
 				}
 
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
+				if (e.getKeyCode() == KeyEvent.VK_ADD) {
 					rotationSpeed = 4;
 				}
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
@@ -285,7 +298,7 @@ public class Player {
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
 					motionX = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD3) {
+				if (e.getKeyCode() == KeyEvent.VK_ADD) {
 					rotationSpeed = 0;
 				}
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
@@ -306,12 +319,20 @@ public class Player {
 			Game.game.handler.addObject(magic1);
 		
 		}
+		if (this.type == PLAYERTYPE.HEAVY) {
+			Projectile melee1 = new Projectile(x, y, ID.Melee, this);
+			Game.game.handler.addObject(melee1);
+		
+		}
 	}
 
 	public void setPlayerType(PLAYERTYPE type) {
 		this.type = type;
 		if(this.type == PLAYERTYPE.HEAVY){
-			this.health = 1000;
+			this.health = 300;
+		}
+		if(this.type == PLAYERTYPE.MAGE){
+			this.health = 60;
 		}
 	}
 }
