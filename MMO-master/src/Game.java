@@ -25,8 +25,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public static Character character;
 	
 	public static CharacterFaction createFaction;
-	public static CharacterClass createClass;
-	public static CharacterFinal createFinal;
 	
 	public static Game game;
 	public Rectangle mouse;
@@ -65,8 +63,6 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		handler = new Handler();
 		character = new Character();
 		createFaction = new CharacterFaction();
-		createClass = new CharacterClass();
-		createFinal = new CharacterFinal();
 	}
 	
 	public Game(){
@@ -153,10 +149,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		if(Game.State == STATE.CHARACTER_FACTION) {
 			Game.createFaction.render(g);
 		}
-		if(game.State == STATE.WIN){
+		if(Game.State == STATE.WIN){
 			g.setFont(new Font("Minecraft", Font.PLAIN, 93));
 			g.setColor(Color.BLACK);
-			g.drawString("Player" + game.winner + " WINS", 0, 100);
+			g.drawString("Player" + Game.winner + " WINS", 0, 100);
 		}
 	}
 
@@ -206,7 +202,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	}
 
 	public void keyPressed(KeyEvent e) {
-		if(Game.State == STATE.CONTROLS  || game.State == STATE.WIN){
+		if(Game.State == STATE.CONTROLS  || Game.State == STATE.WIN){
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE){
 				Game.State = STATE.MENU;
 			}
@@ -222,7 +218,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			game.player1.control(e, false);
 			game.player2.control(e, false);
 		}
-
+			
 	}
 
 	public void mouseClicked(MouseEvent e) {
