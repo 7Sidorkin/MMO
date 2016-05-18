@@ -7,6 +7,8 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 
 import javax.swing.JFrame;
@@ -49,7 +51,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		WIN
 	};
 
-	public static STATE State = STATE.MENU;
+	public static STATE State = STATE.GAME;
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -158,14 +160,14 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
 	public static void main(String[] args) {
 		
-//	File file = new File ("./test.txt");
-//	try {
-//		writer = new PrintWriter(file);
-//	} catch (FileNotFoundException e) {
-//		// TODO Auto-generated catch block
-//		e.printStackTrace();
-//	}
-//	writer.println("test");
+	/*File file = new File ("./MMO-master/src/grahpics/blackguard/Mage/test.txt");
+	try {
+		writer = new PrintWriter(file);
+	} catch (FileNotFoundException e) {
+		// TODO Auto-generated catch block
+		e.printStackTrace();
+	}
+	writer.println("test"); */
 	
 	
 		// Creates new instance of Game
@@ -237,7 +239,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 				player1.pointing = 0;
 				player2.pointing = 0;
 
-				Game.State = STATE.CHARACTER;
+				Game.State = STATE.GAME;
 			}
 			if (menu.quitButton.contains(mouse)) {
 				System.exit(1);
