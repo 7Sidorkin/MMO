@@ -51,7 +51,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		WIN
 	};
 
-	public static STATE State = STATE.GAME;
+	public static STATE State = STATE.MENU;
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -239,7 +239,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 				player1.pointing = 0;
 				player2.pointing = 0;
 
-				Game.State = STATE.GAME;
+				Game.State = STATE.CHARACTER;
 			}
 			if (menu.quitButton.contains(mouse)) {
 				System.exit(1);
