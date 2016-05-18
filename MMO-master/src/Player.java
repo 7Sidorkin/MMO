@@ -22,7 +22,7 @@ public class Player {
 	public AffineTransform at;
 
 	public int cool1 = 1000; // cooldown time in milliseconds for main attack
-	public int cool2 = 100000;// cooldown time in milliseconds for the ability
+	public int cool2 = 10;// cooldown time in milliseconds for the ability
 	public long tack1Start = -cool1, tack2Start = -cool2;
 
 	public int speed = 4;
@@ -33,6 +33,7 @@ public class Player {
 	public Rectangle frontB, backB, leftB, rightB, playerB;
 	public Shape frontS, backS, leftS, rightS, playerS;
 
+	
 	public Rectangle screenTop, screenBottom, screenLeft, screenRight;
 
 	public PLAYERTYPE type;
@@ -218,6 +219,12 @@ public class Player {
 				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
 					rotationSpeed = -4;
 				}
+				if (e.getKeyCode() == KeyEvent.VK_B) {
+					if (System.currentTimeMillis() - tack2Start > cool2) {
+						tack2Start = System.currentTimeMillis();
+						ability();
+					}
+				}
 			}
 			if (!pressed) {
 				if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -284,6 +291,12 @@ public class Player {
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
 					rotationSpeed = -4;
 				}
+				if (e.getKeyCode() == KeyEvent.VK_NUMPAD0) {
+					if (System.currentTimeMillis() - tack2Start > cool2) {
+						tack2Start = System.currentTimeMillis();
+						ability();
+					}
+				}
 			}
 			if (!pressed) {
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
@@ -333,6 +346,29 @@ public class Player {
 		}
 		if(this.type == PLAYERTYPE.MAGE){
 			this.health = 60;
+		}
+	}
+	
+	public void ability(){
+		if(this.type == PLAYERTYPE.HEAVY){
+			
+		}
+		if(this.type == PLAYERTYPE.MAGE){
+			Projectile melee1 = new Projectile(x, y, ID.Mage_Ability, this);
+			Game.game.handler.addObject(melee1);
+		}
+		if(this.type == PLAYERTYPE.ARCHER){
+			long start = 10;
+			int n = 0;
+			while(n < 6){
+				if(start - System.currentTimeMillis()< -9){
+				Projectile melee1 = new Projectile(x, y, ID.Arrow, this);
+				Game.game.handler.addObject(melee1);
+				start = System.currentTimeMillis();
+				System.out.println("test" + n);
+				n++;
+				}
+			}
 		}
 	}
 }
