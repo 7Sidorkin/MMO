@@ -2,17 +2,17 @@ import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
 
-import javafx.scene.shape.Ellipse;
-
 public class Projectile extends GameObject {
 	int speed = 10;
 	int numTick = 0;
 	int damage = 10;
 	private Rectangle arrow;
 	private Ellipse2D aoe;
+	private Player player;
 
 	public Projectile(int x, int y, ID id, Player player) {
 		super(x, y, id);
+		this.player = player;
 		if (player.type == Player.PLAYERTYPE.MAGE) {
 			this.speed = 7;
 			this.damage = 15;
@@ -24,8 +24,23 @@ public class Projectile extends GameObject {
 			this.speed = 10;
 			this.damage = 25;
 		}
-		this.motionX = (int) (speed * Math.cos(Math.toRadians(player.pointing - 90)));
-		this.motionY = (int) (speed * Math.sin(Math.toRadians(player.pointing - 90)));
+		switch(player.pointing){
+		case 1:
+			motionX = 0;
+			motionY = -speed;
+			break;
+		case 2:
+			motionX = speed;
+			motionY = 0;
+			break;
+		case 3:
+			motionX = 0;
+			motionY = speed;
+			break;
+		case 4 :
+			motionX = -speed;
+			motionY = 0;
+		}
 		this.arrow = new Rectangle(x, y, 5, 5);
 		System.out.println("shoot");
 		this.x += this.motionX;
@@ -64,8 +79,8 @@ public class Projectile extends GameObject {
 			if (this.numTick > 1) {
 				Game.game.handler.removeObject(this);
 			}
-		}else if(this.id == ID.Mage_Ability){
-			if (this.numTick > 65) {
+		}else if(this.id == ID.Mage_Ability || player.detonate){
+			if (this.numTick > 65 || player.detonate) {
 				Game.game.handler.removeObject(this);
 				this.motionX = 0;
 				this.motionY = 0;
@@ -92,6 +107,7 @@ public class Projectile extends GameObject {
 	}
 
 	public void render(Graphics g) {
+		g.drawOval(x-22, y-22, 48, 48);
 		if (this.speed == 7) {
 			g.fillRect(this.x, this.y, 5, 5);
 		}

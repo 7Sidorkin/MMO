@@ -5,6 +5,7 @@ import java.awt.Rectangle;
 import java.awt.Shape;
 import java.awt.event.KeyEvent;
 import java.awt.geom.AffineTransform;
+import java.awt.image.BufferedImage;
 
 public class Player {
 
@@ -17,8 +18,11 @@ public class Player {
 	public int health = 100;
 	
 	public int playerNum;
-	public int rotationSpeed = 0;
 
+	public boolean detonate = false;
+	
+	public SpriteSheetReader reader;
+	
 	public AffineTransform at;
 
 	public int cool1 = 1000; // cooldown time in milliseconds for main attack
@@ -26,8 +30,16 @@ public class Player {
 	public long tack1Start = -cool1, tack2Start = -cool2;
 
 	public int speed = 4;
-
-	public int pointing = 0; // 0 = Straight at top of screen
+	
+	public Animation bMageS, bMageD, bMageL, bMageU, bMageR, rMageS, rMageD, rMageL, rMageU, rMageR, bArcherS, bArcherD, bArcherL, 
+	bArcherU, bArcherR, rArcherS, rArcherD, rArcherL, 
+	rArcherU, rArcherR, bHeavyS, bHeavyD, bHeavyL, bHeavyU, bHeavyR, rHeavyS, rHeavyD, rHeavyL, rHeavyU, rHeavyR;
+	
+	public BufferedImage[] bMageSI, bMageDI, bMageLI, bMageUI, bMageRI, rMageSI, rMageDI, rMageLI, rMageUI, rMageRI, bArcherSI, bArcherDI, bArcherI, 
+			bArcherUI, bArcherRI, rArcherSI, rArcherDI, rArcherLI, 
+			rArcherUI, rArcherRI, bHeavySI, bHeavyDI, bHeavyLI, bHeavyUI, bHeavyRI, rHeavySI, rHeavyDI, rHeavyLI, rHeavyUI, rHeavyRI;
+	
+	public int pointing = 1; // 1 up 2 right 3 down 4 left
 
 	public Rectangle front, back, left, right, player;
 	public Rectangle frontB, backB, leftB, rightB, playerB;
@@ -39,6 +51,7 @@ public class Player {
 	public PLAYERTYPE type;
 
 	public Player(PLAYERTYPE p, int playerNumber) {
+		reader = new SpriteSheetReader();
 		this.playerNum = playerNumber;
 		if (playerNum == 2) {
 			x = 700;
@@ -49,23 +62,14 @@ public class Player {
 		left = new Rectangle(x, y, 1, 32);
 		right = new Rectangle(x + 31, y, 1, 32);
 		player = new Rectangle(x, y, 32, 32);
-		at = new AffineTransform();
-		at = AffineTransform.getRotateInstance(Math.toRadians(pointing), x + 16, y + 16);
-		playerS = at.createTransformedShape(player);
-		frontS = at.createTransformedShape(front);
-		backS = at.createTransformedShape(back);
-		leftS = at.createTransformedShape(left);
-		rightS = at.createTransformedShape(right);
-		playerB = playerS.getBounds();
-		frontB = frontS.getBounds();
-		backB = backS.getBounds();
-		leftB = leftS.getBounds();
-		rightB = rightS.getBounds();
+		playerB = player.getBounds();
 		screenTop = new Rectangle(0, 0, 1280, 1);
 		screenBottom = new Rectangle(0, 720, 1280, 1);
 		screenLeft = new Rectangle(0, 0, 1, 720);
 		screenRight = new Rectangle(1280, 0, 1, 720);
 		this.type = p;
+		bMageSI = getSprites(4, )
+		bMageS = new Animation(3, )
 	}
 
 	public void render(Graphics2D g) {
@@ -73,10 +77,10 @@ public class Player {
 		g.drawLine(0, 20, 1280, 20);
 		// g.drawRect(x, y, 32, 32);
 		// g.rotate(Math.toRadians(pointing), x + 16, y + 16);
-		g.draw(playerS);
+		g.draw(playerB);
 		g.setColor(Color.red);
-		g.draw(frontS);
-		if (frontS.intersects(screenTop)) {
+		g.draw(front);
+		if (front.intersects(screenTop)) {
 			System.out.println("yay");
 		}
 		if(this.health <= 0){
@@ -90,13 +94,13 @@ public class Player {
 		}
 		if(this.type == PLAYERTYPE.HEAVY){
 			g.setColor(Color.MAGENTA);
-			g.fill(this.playerS);
+			g.fill(this.player);
 		}else if(this.type == PLAYERTYPE.MAGE){
 			g.setColor(Color.GREEN);
-			g.fill(this.playerS);
+			g.fill(this.player);
 		}else if(this.type == PLAYERTYPE.ARCHER){
 			g.setColor(Color.BLUE);
-			g.fill(this.playerS);
+			g.fill(this.player);
 		}
 		g.setFont(new Font("Minecraft",Font.PLAIN, 10));
 		g.drawString(""+ health, x, y);
@@ -105,21 +109,40 @@ public class Player {
 
 	public void tick() {
 		at = AffineTransform.getRotateInstance(Math.toRadians(pointing), x + 16, y + 16);
-		front.setLocation(x, y);
-		back.setLocation(x, y + 31);
-		left.setLocation(x, y);
-		right.setLocation(x + 31, y);
-		player.setLocation(x, y);
-		playerS = at.createTransformedShape(player);
-		frontS = at.createTransformedShape(front);
-		backS = at.createTransformedShape(back);
-		leftS = at.createTransformedShape(left);
-		leftS = at.createTransformedShape(right);
-		playerB = playerS.getBounds();
-		frontB = frontS.getBounds();
-		backB = backS.getBounds();
-		leftB = leftS.getBounds();
-		rightB = rightS.getBounds();
+		switch (pointing) {
+		case 1 :
+			front.setBounds(x, y, 32, 1);
+			back.setBounds(x, y + 31, 32, 1);
+			left.setBounds(x, y, 1, 32);
+			right.setBounds(x + 31, y, 1, 32);
+			player.setLocation(x, y);
+			playerB.setLocation(x, y);
+			break;
+		case 2 :
+			front.setBounds(x+ 31, y, 1, 32);
+			back.setBounds(x, y, 1, 32);
+			left.setBounds(x, y, 32, 1);
+			right.setBounds(x, y + 31, 32, 1);
+			player.setLocation(x, y);
+			playerB.setLocation(x, y);
+			break;
+		case 3:
+			front.setBounds(x, y + 31, 32, 1);
+			back.setBounds(x, y, 32, 1);
+			left.setBounds(x + 31, y, 1, 32);
+			right.setBounds(x, y, 1, 32);
+			player.setLocation(x, y);
+			playerB.setLocation(x, y);
+			break;
+		case 4:
+			front.setBounds(x, y, 1, 32);
+			back.setBounds(x + 31, y, 1, 32);
+			left.setBounds(x, y + 31, 32, 1);
+			right.setBounds(x, y, 32, 1);
+			player.setLocation(x, y);
+			playerB.setLocation(x, y);
+			break;
+		}
 		// if(player.getX() + 32 + speed > 1280 || player.getX() - speed < 0){
 		// motionX = 0;
 		// }
@@ -142,7 +165,7 @@ public class Player {
 			y++;
 		}
 		if(playerNum == 1){
-			if(this.playerS.intersects(Game.game.player2.playerB)){
+			if(this.player.intersects(Game.game.player2.player)){
 				motionX = motionX * -1;
 				motionY = motionY * -1;
 				x += motionX;
@@ -155,7 +178,7 @@ public class Player {
 		}
 		
 		if(playerNum == 2){
-			if(this.playerS.intersects(Game.game.player1.playerB)){
+			if(this.player.intersects(Game.game.player1.player)){
 				motionX = motionX * -1;
 				motionY = motionY * -1;
 				x += motionX;
@@ -169,7 +192,6 @@ public class Player {
 		
 		x += motionX;
 		y += motionY;
-		pointing += rotationSpeed;
 
 	}
 
@@ -178,6 +200,7 @@ public class Player {
 			if (pressed) {
 				if (e.getKeyCode() == KeyEvent.VK_W) {
 					motionY = -speed;
+					pointing = 1;
 					if (playerB.getY() - speed - 20 < 0) {
 						motionY = 0;
 						y++;
@@ -185,6 +208,7 @@ public class Player {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_S) {
 					motionY = speed;
+					pointing = 3;
 					if (playerB.getY() + speed + 20 + playerB.getHeight() > 720) {
 						motionY = 0;
 						y--;
@@ -193,6 +217,7 @@ public class Player {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_A) {
 					motionX = -speed;
+					pointing = 4;
 					if (playerB.getX() - speed - 20 < 0) {
 						motionX = 0;
 						x++;
@@ -201,6 +226,7 @@ public class Player {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_D) {
 					motionX = speed;
+					pointing = 2;
 					if (playerB.getX() + speed + 20 + playerB.getWidth() > 1280) {
 						motionX = 0;
 						x--;
@@ -212,19 +238,16 @@ public class Player {
 						attack();
 					}
 				}
-
-				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					rotationSpeed = 4;
-				}
-				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-					rotationSpeed = -4;
-				}
 				if (e.getKeyCode() == KeyEvent.VK_B) {
 					if (System.currentTimeMillis() - tack2Start > cool2) {
 						tack2Start = System.currentTimeMillis();
 						ability();
 					}
 				}
+				if(e.getKeyCode() == KeyEvent.VK_N){
+					detonate = true;
+				}
+				
 			}
 			if (!pressed) {
 				if (e.getKeyCode() == KeyEvent.VK_W) {
@@ -239,17 +262,15 @@ public class Player {
 				if (e.getKeyCode() == KeyEvent.VK_D) {
 					motionX = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_SPACE) {
-					rotationSpeed = 0;
-				}
-				if (e.getKeyCode() == KeyEvent.VK_SHIFT) {
-					rotationSpeed = 0;
+				if(e.getKeyCode() == KeyEvent.VK_N){
+					detonate = false;
 				}
 			}
 		}else{
 			if (pressed) {
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
 					motionY = -speed;
+					pointing = 1;
 					if (playerB.getY() - speed - 20 < 0) {
 						motionY = 0;
 						y++;
@@ -257,6 +278,7 @@ public class Player {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD5) {
 					motionY = speed;
+					pointing = 3;
 					if (playerB.getY() + speed + 20 + playerB.getHeight() > 720) {
 						motionY = 0;
 						y--;
@@ -265,6 +287,7 @@ public class Player {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
 					motionX = -speed;
+					pointing = 4;
 					if (playerB.getX() - speed - 20 < 0) {
 						motionX = 0;
 						x++;
@@ -273,6 +296,7 @@ public class Player {
 				}
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
 					motionX = speed;
+					pointing = 2;
 					if (playerB.getX() + speed + 20 + playerB.getWidth() > 1280) {
 						motionX = 0;
 						x--;
@@ -285,17 +309,14 @@ public class Player {
 					}
 				}
 
-				if (e.getKeyCode() == KeyEvent.VK_ADD) {
-					rotationSpeed = 4;
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
-					rotationSpeed = -4;
-				}
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD0) {
 					if (System.currentTimeMillis() - tack2Start > cool2) {
 						tack2Start = System.currentTimeMillis();
 						ability();
 					}
+				}
+				if(e.getKeyCode() == KeyEvent.VK_NUMPAD2){
+					detonate = true;
 				}
 			}
 			if (!pressed) {
@@ -311,11 +332,8 @@ public class Player {
 				if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
 					motionX = 0;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_ADD) {
-					rotationSpeed = 0;
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD1) {
-					rotationSpeed = 0;
+				if(e.getKeyCode() == KeyEvent.VK_NUMPAD2){
+					detonate = false;
 				}
 			}
 		}

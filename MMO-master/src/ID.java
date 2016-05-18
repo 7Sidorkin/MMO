@@ -1,6 +1,6 @@
 public enum ID {
 	Arrow,
 	magic,
-	Melee.
+	Melee,
 	Mage_Ability;
 }
