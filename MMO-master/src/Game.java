@@ -36,6 +36,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public int mouseX, mouseY;
 	public static int winner;
 
+	public BufferedImage rMage, rArcher, rHeavy, bMage, bHeavy, bArcher;
+	
 	private BufferedImage images = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
 
 	public static enum STATE {
@@ -51,7 +53,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		WIN
 	};
 
-	public static STATE State = STATE.MENU;
+	public static STATE State = STATE.GAME;
 
 	///////////////////////////////////////////////////////////////////////////
 
@@ -59,9 +61,15 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		menu = new Menu();
 		controls = new Controls();
 		mouse = new Rectangle();
-		player1 = new Player(Player.PLAYERTYPE.MAGE, 1);
+		player1 = new Player(Player.PLAYERTYPE.ARCHER, 1);
 		player2 = new Player(Player.PLAYERTYPE.ARCHER, 2);
 		//player = new Player(Player.PLAYERTYPE.MAGE);
+		rMage = player1.rMageSI[1];
+		rArcher = player1.rArcherSI[1];
+		rHeavy = player1.rHeavySI[1];
+		bMage = player1.bMageSI[1];
+		bArcher = player1.bArcherSI[1];
+		bHeavy = player1.bHeavySI[1];
 		handler = new Handler();
 		character = new Character();
 		createFaction = new CharacterFaction();
@@ -239,7 +247,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 				player1.pointing = 0;
 				player2.pointing = 0;
 
-				Game.State = STATE.CHARACTER;
+				Game.State = STATE.GAME;
 			}
 			if (menu.quitButton.contains(mouse)) {
 				System.exit(1);
