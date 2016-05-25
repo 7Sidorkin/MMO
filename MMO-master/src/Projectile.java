@@ -1,6 +1,8 @@
 import java.awt.Graphics;
 import java.awt.Rectangle;
 import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+
 
 public class Projectile extends GameObject {
 	int speed = 10;
@@ -9,15 +11,24 @@ public class Projectile extends GameObject {
 	private Rectangle arrow;
 	private Ellipse2D aoe;
 	private Player player;
+	BufferedImage[] boom;
+	public Animation boomA;
+	public SpriteSheetReader reader;
+	public boolean animate = false;
+	public int animTime = 0;
 
 	public Projectile(int x, int y, ID id, Player player) {
 		super(x, y, id);
+		reader = new SpriteSheetReader();
 		this.player = player;
 		if (player.type == Player.PLAYERTYPE.MAGE) {
 			this.speed = 7;
 			this.damage = 15;
 			if (this.id == ID.Mage_Ability) {
 				this.damage = 30;
+				boom = reader.getSprites(15, imageLoader.imageLoader("./MMO-master/src/grahpics/boom.png"));
+				boomA = new Animation(2, boom[0], boom[1], boom[2], boom[3], boom[4], boom[5], boom[6], boom[7], boom[8], boom[9], boom[10], boom[11], boom[12], boom[13], boom[14]);
+				this.boomA.runAnimation();
 			}
 		}
 		if (player.type == Player.PLAYERTYPE.HEAVY) {
@@ -66,15 +77,20 @@ public class Projectile extends GameObject {
 			}
 		} else if (this.id == ID.Mage_Ability || player.detonate) {
 			if (this.numTick > 65 || player.detonate) {
-				Game.game.handler.removeObject(this);
 				this.motionX = 0;
 				this.motionY = 0;
+				this.animate = true;
+				boomA.nextFrame();
+				animTime++;
 				aoe = new Ellipse2D.Double(this.x - 22, this.y - 22, 48, 48);
 				if (this.aoe.intersects(Game.game.player1.playerB)) {
 					Game.game.player1.health -= 50;
 				}
 				if (this.aoe.intersects(Game.game.player2.playerB)) {
 					Game.game.player2.health -= 50;
+				}
+				if(animTime > 15){
+					Game.game.handler.removeObject(this);
 				}
 			}
 		}
@@ -102,12 +118,15 @@ public class Projectile extends GameObject {
 	}
 
 	public void render(Graphics g) {
-		g.drawOval(x - 22, y - 22, 48, 48);
+		//g.drawOval(x - 22, y - 22, 48, 48);
 		if (this.speed == 7) {
 			g.fillRect(this.x, this.y, 5, 5);
 		}
 		if (!(this.damage == 25)) {
 			g.drawRect(this.x, this.y, 5, 5);
+		}
+		if(this.id == ID.Mage_Ability && animate && animTime <= 30){
+			boomA.drawAnimation(g, x, y, 0);			
 		}
 
 	}

@@ -30,7 +30,7 @@ public class Player {
 	public AffineTransform at;
 
 	public int cool1 = 1000; // cooldown time in milliseconds for main attack
-	public int cool2 = 10;// cooldown time in milliseconds for the ability
+	public int cool2 = 5000;// cooldown time in milliseconds for the ability
 	public long tack1Start = -cool1, tack2Start = -cool2;
 
 	public int speed = 4;
@@ -168,7 +168,7 @@ public class Player {
 		g.setColor(Color.red);
 		g.draw(front);
 		if (front.intersects(screenTop)) {
-			System.out.println("yay");
+		//	System.out.println("yay");
 		}
 		if (this.health <= 0) {
 			if (this.playerNum == 1) {
@@ -340,7 +340,7 @@ public class Player {
 			break;
 		}
 		
-		System.out.println("pointing = " + pointing);
+		//System.out.println("pointing = " + pointing);
 		
 		playerShoot.setLocation(x - 16, y-16);
 		if (motionX != 0 || motionY != 0) {

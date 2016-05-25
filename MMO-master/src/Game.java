@@ -61,7 +61,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		menu = new Menu();
 		controls = new Controls();
 		mouse = new Rectangle();
-		player1 = new Player(Player.PLAYERTYPE.ARCHER, 1);
+		player1 = new Player(Player.PLAYERTYPE.MAGE, 1);
 		player2 = new Player(Player.PLAYERTYPE.ARCHER, 2);
 		//player = new Player(Player.PLAYERTYPE.MAGE);
 		rMage = player1.rMageSI[1];
