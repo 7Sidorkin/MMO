@@ -26,8 +26,9 @@ public class Projectile extends GameObject {
 			this.damage = 15;
 			if (this.id == ID.Mage_Ability) {
 				this.damage = 30;
+				reader.size = 96;
 				boom = reader.getSprites(15, imageLoader.imageLoader("./MMO-master/src/grahpics/boom.png"));
-				boomA = new Animation(2, boom[0], boom[1], boom[2], boom[3], boom[4], boom[5], boom[6], boom[7], boom[8], boom[9], boom[10], boom[11], boom[12], boom[13], boom[14]);
+				boomA = new Animation(4, boom[0], boom[1], boom[2], boom[3], boom[4], boom[5], boom[6], boom[7], boom[8], boom[9], boom[10], boom[11], boom[12], boom[13], boom[14]);
 				this.boomA.runAnimation();
 			}
 		}
@@ -126,7 +127,7 @@ public class Projectile extends GameObject {
 			g.drawRect(this.x, this.y, 5, 5);
 		}
 		if(this.id == ID.Mage_Ability && animate && animTime <= 30){
-			boomA.drawAnimation(g, x, y, 0);			
+			boomA.drawAnimation(g, x, y-30, 0);			
 		}
 
 	}

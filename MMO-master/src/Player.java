@@ -13,7 +13,7 @@ public class Player {
 		MAGE, HEAVY, ARCHER, I_HAVE_LITERALLY_NO_IDEA_OTHER_CLASSES,
 	};
 
-	public int x = 100, y = 100, motionX, motionY, width = 32, height = 32;
+	public int x = 100, y = 100, motionX, motionY, width = 64, height = 64;
 
 	public int health = 100;
 
@@ -30,7 +30,7 @@ public class Player {
 	public AffineTransform at;
 
 	public int cool1 = 1000; // cooldown time in milliseconds for main attack
-	public int cool2 = 5000;// cooldown time in milliseconds for the ability
+	public int cool2 = 10;// cooldown time in milliseconds for the ability
 	public long tack1Start = -cool1, tack2Start = -cool2;
 
 	public int speed = 4;
@@ -61,17 +61,17 @@ public class Player {
 			x = 700;
 			y = 100;
 		}
-		front = new Rectangle(x, y, 32, 0);
-		back = new Rectangle(x, y + 31, 32, 1);
-		left = new Rectangle(x, y, 1, 32);
-		right = new Rectangle(x + 31, y, 1, 32);
-		player = new Rectangle(x, y, 32, 32);
+		front = new Rectangle(x, y, 64, 0);
+		back = new Rectangle(x, y + 63, 64, 1);
+		left = new Rectangle(x, y, 1, 64);
+		right = new Rectangle(x + 63, y, 1, 64);
+		player = new Rectangle(x, y, 64, 64);
 		playerB = player.getBounds();
 		screenTop = new Rectangle(0, 0, 1280, 1);
 		screenBottom = new Rectangle(0, 720, 1280, 1);
 		screenLeft = new Rectangle(0, 0, 1, 720);
 		screenRight = new Rectangle(1280, 0, 1, 720);
-		playerShoot = new Rectangle(x - 16, y - 16, 64, 64);
+		playerShoot = new Rectangle(x - 16, y - 16, 96, 96);
 		this.type = p;
 		bMageSI = reader.getSprites(4, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGES.png"));
 		bMageS = new Animation(3, bMageSI[0], bMageSI[1], bMageSI[2], bMageSI[3]);
@@ -162,7 +162,7 @@ public class Player {
 		// g.drawImage(imageLoader.imageLoader("./MAGE.png"), 0, 0, null);
 		g.setColor(Color.black);
 		g.drawLine(0, 20, 1280, 20);
-		// g.drawRect(x, y, 32, 32);
+		// g.drawRect(x, y, 64, 64);
 		// g.rotate(Math.toRadians(pointing), x + 16, y + 16);
 		g.draw(playerB);
 		g.setColor(Color.red);
@@ -307,34 +307,34 @@ public class Player {
 		at = AffineTransform.getRotateInstance(Math.toRadians(pointing), x + 16, y + 16);
 		switch (pointing) {
 		case 1:
-			front.setBounds(x, y, 32, 1);
-			back.setBounds(x, y + 31, 32, 1);
-			left.setBounds(x, y, 1, 32);
-			right.setBounds(x + 31, y, 1, 32);
+			front.setBounds(x, y, 64, 1);
+			back.setBounds(x, y + 63, 64, 1);
+			left.setBounds(x, y, 1, 64);
+			right.setBounds(x + 63, y, 1, 64);
 			player.setLocation(x, y);
 			playerB.setLocation(x, y);
 			break;
 		case 2:
-			front.setBounds(x + 31, y, 1, 32);
-			back.setBounds(x, y, 1, 32);
-			left.setBounds(x, y, 32, 1);
-			right.setBounds(x, y + 31, 32, 1);
+			front.setBounds(x + 63, y, 1, 64);
+			back.setBounds(x, y, 1, 64);
+			left.setBounds(x, y, 64, 1);
+			right.setBounds(x, y + 63, 64, 1);
 			player.setLocation(x, y);
 			playerB.setLocation(x, y);
 			break;
 		case 3:
-			front.setBounds(x, y + 31, 32, 1);
-			back.setBounds(x, y, 32, 1);
-			left.setBounds(x + 31, y, 1, 32);
-			right.setBounds(x, y, 1, 32);
+			front.setBounds(x, y + 63, 64, 1);
+			back.setBounds(x, y, 64, 1);
+			left.setBounds(x + 63, y, 1, 64);
+			right.setBounds(x, y, 1, 64);
 			player.setLocation(x, y);
 			playerB.setLocation(x, y);
 			break;
 		case 4:
-			front.setBounds(x, y, 1, 32);
-			back.setBounds(x + 31, y, 1, 32);
-			left.setBounds(x, y + 31, 32, 1);
-			right.setBounds(x, y, 32, 1);
+			front.setBounds(x, y, 1, 64);
+			back.setBounds(x + 63, y, 1, 64);
+			left.setBounds(x, y + 63, 64, 1);
+			right.setBounds(x, y, 64, 1);
 			player.setLocation(x, y);
 			playerB.setLocation(x, y);
 			break;
@@ -461,7 +461,7 @@ public class Player {
 				}
 			
 	
-		// if(player.getX() + 32 + speed > 1280 || player.getX() - speed < 0){
+		// if(player.getX() + 64 + speed > 1280 || player.getX() - speed < 0){
 		// motionX = 0;
 		// }
 		// System.out.println(x + ", " + y);
