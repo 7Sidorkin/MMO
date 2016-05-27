@@ -24,8 +24,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public static Menu menu;
 	public static Controls controls;
 	public static Character character;
-
+	public static CharacterFaction faction;
+	public static CharacterClass race;
 	public static CharacterFaction createFaction;
+	public static CharacterFinal finalChoice;
 
 	public static int powerUpTick = 2700;
 	
