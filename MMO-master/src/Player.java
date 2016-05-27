@@ -30,7 +30,7 @@ public class Player {
 	public AffineTransform at;
 
 	public int cool1 = 1000; // cooldown time in milliseconds for main attack
-	public int cool2 = 10;// cooldown time in milliseconds for the ability
+	public int cool2 = 5000;// cooldown time in milliseconds for the ability
 	public long tack1Start = -cool1, tack2Start = -cool2;
 
 	public int speed = 4;
@@ -74,7 +74,7 @@ public class Player {
 		playerShoot = new Rectangle(x - 16, y - 16, 96, 96);
 		this.type = p;
 		bMageSI = reader.getSprites(4, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGES.png"));
-		bMageS = new Animation(3, bMageSI[0], bMageSI[1], bMageSI[2], bMageSI[3]);
+		bMageS = new Animation(9, bMageSI[0], bMageSI[1], bMageSI[2], bMageSI[3]);
 		bMageUI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGEU.png"));
 		bMageU = new Animation(3, bMageUI[0], bMageUI[1], bMageUI[2], bMageUI[3], bMageUI[4], bMageUI[5]);
 		bMageDI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGED.png"));
@@ -85,7 +85,7 @@ public class Player {
 		bMageL = new Animation(3, bMageLI[0], bMageLI[1], bMageLI[2], bMageLI[3], bMageLI[4], bMageLI[5]);
 		bHeavySI = reader.getSprites(4,
 				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/heavy/HEAVYS.png"));
-		bHeavyS = new Animation(3, bHeavySI[0], bHeavySI[1], bHeavySI[2], bHeavySI[3]);
+		bHeavyS = new Animation(9, bHeavySI[0], bHeavySI[1], bHeavySI[2], bHeavySI[3]);
 		bHeavyUI = reader.getSprites(6,
 				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/heavy/HEAVYU.png"));
 		bHeavyU = new Animation(3, bHeavyUI[0], bHeavyUI[1], bHeavyUI[2], bHeavyUI[3], bHeavyUI[4], bHeavyUI[5]);
@@ -100,7 +100,7 @@ public class Player {
 		bHeavyR = new Animation(3, bHeavyRI[0], bHeavyRI[1], bHeavyRI[2], bHeavyRI[3], bHeavyRI[4], bHeavyRI[5]);
 		bArcherSI = reader.getSprites(4,
 				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Archer/ARCHERS.png"));
-		bArcherS = new Animation(3, bArcherSI[0], bArcherSI[1], bArcherSI[2], bArcherSI[3]);
+		bArcherS = new Animation(9, bArcherSI[0], bArcherSI[1], bArcherSI[2], bArcherSI[3]);
 		bArcherUI = reader.getSprites(6,
 				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Archer/ARCHERU.png"));
 		bArcherU = new Animation(3, bArcherUI[0], bArcherUI[1], bArcherUI[2], bArcherUI[3], bArcherUI[4], bArcherUI[5]);
@@ -116,7 +116,7 @@ public class Player {
 		bMageSI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGES.png"));
 
 		rMageSI = reader.getSprites(4, imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Mage/MAGES.png"));
-		rMageS = new Animation(3, rMageSI[0], rMageSI[1], rMageSI[2], rMageSI[3]);
+		rMageS = new Animation(9, rMageSI[0], rMageSI[1], rMageSI[2], rMageSI[3]);
 		rMageUI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Mage/MAGEU.png"));
 		rMageU = new Animation(3, rMageUI[0], rMageUI[1], rMageUI[2], rMageUI[3], rMageUI[4], rMageUI[5]);
 		rMageDI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Mage/MAGED.png"));
@@ -127,7 +127,7 @@ public class Player {
 		rMageL = new Animation(3, rMageLI[0], rMageLI[1], rMageLI[2], rMageLI[3], rMageLI[4], rMageLI[5]);
 		rHeavySI = reader.getSprites(4,
 				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/heavy/HEAVYS.png"));
-		rHeavyS = new Animation(3, rHeavySI[0], rHeavySI[1], rHeavySI[2], rHeavySI[3]);
+		rHeavyS = new Animation(9, rHeavySI[0], rHeavySI[1], rHeavySI[2], rHeavySI[3]);
 		rHeavyUI = reader.getSprites(6,
 				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/heavy/HEAVYU.png"));
 		rHeavyU = new Animation(3, rHeavyUI[0], rHeavyUI[1], rHeavyUI[2], rHeavyUI[3], rHeavyUI[4], rHeavyUI[5]);
@@ -142,7 +142,7 @@ public class Player {
 		rHeavyR = new Animation(3, rHeavyRI[0], rHeavyRI[1], rHeavyRI[2], rHeavyRI[3], rHeavyRI[4], rHeavyRI[5]);
 		rArcherSI = reader.getSprites(4,
 				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Archer/ARCHERS.png"));
-		rArcherS = new Animation(3, rArcherSI[0], rArcherSI[1], rArcherSI[2], rArcherSI[3]);
+		rArcherS = new Animation(9, rArcherSI[0], rArcherSI[1], rArcherSI[2], rArcherSI[3]);
 		rArcherUI = reader.getSprites(6,
 				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Archer/ARCHERU.png"));
 		rArcherU = new Animation(3, rArcherUI[0], rArcherUI[1], rArcherUI[2], rArcherUI[3], rArcherUI[4], rArcherUI[5]);
@@ -554,13 +554,13 @@ public class Player {
 						x--;
 					}
 				}
-				if (e.getKeyCode() == KeyEvent.VK_V) {
+				if (e.getKeyCode() == KeyEvent.VK_Q) {
 					if (System.currentTimeMillis() - tack1Start > cool1) {
 						tack1Start = System.currentTimeMillis();
 						attack();
 					}
 				}
-				if (e.getKeyCode() == KeyEvent.VK_B) {
+				if (e.getKeyCode() == KeyEvent.VK_E) {
 					if (this.type == PLAYERTYPE.HEAVY) {
 						blocking = true;
 					}
@@ -569,7 +569,7 @@ public class Player {
 						ability();
 					}
 				}
-				if (e.getKeyCode() == KeyEvent.VK_N) {
+				if (e.getKeyCode() == KeyEvent.VK_R) {
 					detonate = true;
 				}
 
@@ -591,10 +591,10 @@ public class Player {
 					motionX = 0;
 					 
 				}
-				if (e.getKeyCode() == KeyEvent.VK_N) {
+				if (e.getKeyCode() == KeyEvent.VK_R) {
 					detonate = false;
 				}
-				if (e.getKeyCode() == KeyEvent.VK_B) {
+				if (e.getKeyCode() == KeyEvent.VK_E) {
 					if (this.type == PLAYERTYPE.HEAVY) {
 						blocking = false;
 					}
@@ -739,6 +739,21 @@ public class Player {
 		}
 	}
 
+	
+	public void reset(){
+		motionX = 0;
+		motionY = 0; 
+		health = 100;
+		if (this.type == PLAYERTYPE.HEAVY) {
+			this.health = 300;
+		}
+		if (this.type == PLAYERTYPE.MAGE) {
+			this.health = 60;
+		}
+		blocking = false;
+		detonate = false;
+	}
+	
 	
 	public void ability() {
 		int[] point = shotPoint();

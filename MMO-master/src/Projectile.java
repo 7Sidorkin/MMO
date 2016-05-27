@@ -84,14 +84,14 @@ public class Projectile extends GameObject {
 				boomA.nextFrame();
 				animTime++;
 				aoe = new Ellipse2D.Double(this.x - 22, this.y - 22, 48, 48);
-				if (this.aoe.intersects(Game.game.player1.playerB)) {
-					Game.game.player1.health -= 50;
-				}
-				if (this.aoe.intersects(Game.game.player2.playerB)) {
-					Game.game.player2.health -= 50;
-				}
 				if(animTime > 15){
 					Game.game.handler.removeObject(this);
+					if (this.aoe.intersects(Game.game.player1.playerB)) {
+						Game.game.player1.health -= 50;
+					}
+					if (this.aoe.intersects(Game.game.player2.playerB)) {
+						Game.game.player2.health -= 50;
+					}
 				}
 			}
 		}
