@@ -170,11 +170,14 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			game.player2.render(g);
 			game.handler.render(g);
 		}
-		if (Game.State == STATE.CHARACTER) {
+		if(Game.State == STATE.CHARACTER) {
 			Game.character.render(g);
 		}
-		if (Game.State == STATE.CHARACTER_FACTION) {
+		if(Game.State == STATE.CHARACTER_FACTION) {
 			Game.createFaction.render(g);
+		}
+		if(Game.State == STATE.CHARACTERCREATE_CLASS) {
+			Game.race.render(g);
 		}
 		if (Game.State == STATE.WIN) {
 			g.setFont(new Font("Minecraft", Font.PLAIN, 93));
@@ -250,34 +253,49 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		mouseX = e.getX();
 		mouseY = e.getY();
 		mouse.setBounds(e.getX(), e.getY(), 1, 1);
-		if (Game.State == STATE.MENU) {
+	switch(Game.State) {
+		case MENU:
 			if (menu.playButton.contains(mouse)) {
+				player1.health = 100;
+				player2.health = 100;
 				player1.x = 100;
 				player2.x = 700;
 				player1.y = 100;
 				player2.y = 100;
-				player1.reset();
-				player2.reset();
+
 				player1.pointing = 0;
 				player2.pointing = 0;
 
-				powerUpB = false;
-				
 				Game.State = STATE.GAME;
 			}
-			if (menu.quitButton.contains(mouse)) {
-				System.exit(1);
-			}
-			if (menu.helpButton.contains(mouse)) {
-				Game.State = STATE.CONTROLS;
-			}
-
-		}
-		if (Game.State == STATE.CHARACTER) {
-			if (character.createCharacter.contains(mouse)) {
+			break;
+			
+		case CHARACTER:
+			if (character.createCharacter.contains(mouse)){
 				Game.State = STATE.CHARACTER_FACTION;
 				System.out.println("Running state: CharacterCreate_FACTION");
 			}
+			break;
+		case CHARACTER_FACTION:
+			if(createFaction.blackguardRect.contains(mouse)) {
+				Character.chosenFaction = "blackguard";
+				Game.State = STATE.CHARACTERCREATE_CLASS;
+			}
+			if(createFaction.moonshadowRect.contains(mouse)) {
+				Character.chosenFaction = "moonshadow";
+				Game.State = STATE.CHARACTERCREATE_CLASS;
+			}
+			break;
+		case CHARACTERCREATE_CLASS:
+				
+			break;
+		
+		case CHARACTERCREATE_NAME:
+				
+			default:
+				Game.State = STATE.MENU;
+				break;
+			
 		}
 	}
 
