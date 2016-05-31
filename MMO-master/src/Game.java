@@ -148,8 +148,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		game.player2.tick();
 		handler.tick();
 		powerTicks++;
-		if(powerTicks > powerUpTick && powerUpB == false){
-			powerUp powerUp = new powerUp(random.nextInt(1280),random.nextInt(720), ID.PowerUp );
+		powerTicks++;
+		if (powerTicks > powerUpTick && powerUpB == false) {
+			powerUp powerUp = new powerUp(random.nextInt(1280),
+					random.nextInt(720), ID.PowerUp);
 			this.handler.addObject(powerUp);
 			powerUpB = true;
 			powerTicks = 0;
