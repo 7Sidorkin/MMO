@@ -13,6 +13,7 @@ import java.util.Scanner;
 
 //Character selection.
 public class Character {
+	public static String raceClass;
 	static String[] factions = { "blackguard", "moonshadow" };
 	static String[] classes = { "mage", "archer", "warrior" };
 	public Rectangle createCharacter = new Rectangle(70, 270, 450, 100);
@@ -62,7 +63,7 @@ public class Character {
 			System.out.println("Faction: " + retrievedFaction);
 			break;
 		case "CREATE":
-			String raceClass;
+			
 			System.out.println("Name:");
 		    name = scanner.nextLine();
 		    String writeFLPath = "T:/CEN-ICS3U1-1/COMMON/MMORPG/characters/" + name + "/" + "fl.txt";
