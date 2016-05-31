@@ -13,7 +13,7 @@ import java.util.Random;
 import javax.swing.JFrame;
 
 public class Game implements Runnable, KeyListener, MouseListener {
-
+	public static JFrame frame;
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
 	public final String TITLE = "MMO";
@@ -27,7 +27,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public static CharacterFaction faction;
 	public static CharacterClass race;
 	public static CharacterFaction createFaction;
-	public static CharacterFinal finalChoice;
+	public static CharacterFinal characterFinal;
 
 	public static int powerUpTick = 2700;
 	
@@ -56,7 +56,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		MENU, GAME, PAUSE, CONTROLS, CHARACTER, CHARACTER_FACTION, CHARACTERCREATE_CLASS, CHARACTERCREATE_NAME, CHARACTERSELECT, WIN
 	};
 
-	public static STATE State = STATE.GAME;
+	public static STATE State = STATE.MENU;
 
 	// /////////////////////////////////////////////////////////////////////////
 
@@ -78,8 +78,9 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		random = new Random();
 		character = new Character();
 		createFaction = new CharacterFaction();
-		background = imageLoader
-				.imageLoader("./MMO-master/src/grahpics/arenaSet.jpg");
+		background = imageLoader.imageLoader("./MMO-master/src/grahpics/arenaSet.jpg");
+		race = new CharacterClass();
+		characterFinal = new CharacterFinal();
 	}
 
 	public Game() {
@@ -181,6 +182,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		if(Game.State == STATE.CHARACTERCREATE_CLASS) {
 			Game.race.render(g);
 		}
+		if(Game.State == STATE.CHARACTERCREATE_NAME) {
+			Game.characterFinal.render(g);
+			
+		}
 		if (Game.State == STATE.WIN) {
 			g.setFont(new Font("Minecraft", Font.PLAIN, 93));
 			g.setColor(Color.BLACK);
@@ -209,7 +214,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		 */
 
 		// Sets the title of the JFrame
-		JFrame frame = new JFrame(game.TITLE);
+		frame = new JFrame(game.TITLE);
 		// Ads the instance of the game to the JFrame
 		// frame.add(game);
 		// Causes the window to be at preferred size initially
@@ -268,7 +273,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 				player1.pointing = 0;
 				player2.pointing = 0;
 
-				Game.State = STATE.GAME;
+				Game.State = STATE.CHARACTER;
 			}
 			break;
 			
@@ -289,15 +294,54 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			}
 			break;
 		case CHARACTERCREATE_CLASS:
-				
+			switch(Character.chosenFaction) {
+			case "moonshadow":
+				if(race.bMageRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "bmage";
+					System.out.println(Game.State + " " + Character.raceClass);
+					
+				}
+				if(race.bHeavyRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "bheavy";
+					System.out.println(Game.State + " " + Character.raceClass);
+					
+				}
+				if(race.bArcherRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "barcher";
+					System.out.println(Game.State + " " + Character.raceClass);
+				}
+				break;
+			case "blackguard":
+				if(race.rMageRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "rmage";
+					System.out.println(Game.State + " " + Character.raceClass);
+				}
+				if(race.rHeavyRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "rheavy";
+					System.out.println(Game.State + " " + Character.raceClass);
+				}
+				if(race.rArcherRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "rarcher";
+					System.out.println(Game.State + " " + Character.raceClass);
+				}
+				break;
+			}
+			
+			
+			
+			default:
+				Game.State = STATE.MENU;
 			break;
 		
 		case CHARACTERCREATE_NAME:
-				
-			default:
-				Game.State = STATE.MENU;
-				break;
-			
+				System.out.println(Game.State);
+			break;	
 		}
 	}
 
