@@ -6,13 +6,17 @@ import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Random;
 
 import javax.swing.JFrame;
 
-public class Game implements Runnable, KeyListener, MouseListener {
+public class Game implements Runnable, KeyListener, MouseListener,
+		MouseMotionListener {
 	public static JFrame frame;
 	public static final int WIDTH = 1280;
 	public static final int HEIGHT = 720;
@@ -30,11 +34,11 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public static CharacterFinal characterFinal;
 
 	public static int powerUpTick = 2700;
-	
+
 	public static Random random;
-	
+
 	public int powerTicks = 2700;
-	
+
 	public static Game game;
 	public Rectangle mouse;
 	public Player player;
@@ -43,8 +47,10 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	public int mouseX, mouseY;
 	public static int winner;
 
-	public static boolean powerUpB = false;
+	public boolean playButton, helpButton, quitButton;
 	
+	public static boolean powerUpB = false;
+
 	public static BufferedImage background;
 
 	public BufferedImage rMage, rArcher, rHeavy, bMage, bHeavy, bArcher;
@@ -78,7 +84,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		random = new Random();
 		character = new Character();
 		createFaction = new CharacterFaction();
-		background = imageLoader.imageLoader("./MMO-master/src/grahpics/arenaSet.jpg");
+		background = imageLoader
+				.imageLoader("./MMO-master/src/grahpics/arenaSet.jpg");
 		race = new CharacterClass();
 		characterFinal = new CharacterFinal();
 	}
@@ -157,7 +164,24 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			powerTicks = 0;
 			System.out.println("should be spawning");
 		}
-			
+		if (Game.State == STATE.MENU) {
+			if (mouse.intersects(menu.playButton)) {
+				System.out.println("yay");
+				playButton = true;
+			}else{
+				playButton = false;
+			}
+			if (mouse.intersects(menu.helpButton)) {
+				helpButton = true;
+			}else{
+				helpButton = false;
+			}
+			if (mouse.intersects(menu.quitButton)) {
+				quitButton = true;
+			}else{
+				quitButton = false;
+			}
+		}
 	}
 
 	static void render(Graphics2D g) {
@@ -165,6 +189,9 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			menu.render(g);
+			
+			
+			
 		}
 		if (Game.State == STATE.CONTROLS) {
 			controls.render(g);
@@ -175,18 +202,18 @@ public class Game implements Runnable, KeyListener, MouseListener {
 			game.player2.render(g);
 			game.handler.render(g);
 		}
-		if(Game.State == STATE.CHARACTER) {
+		if (Game.State == STATE.CHARACTER) {
 			Game.character.render(g);
 		}
-		if(Game.State == STATE.CHARACTER_FACTION) {
+		if (Game.State == STATE.CHARACTER_FACTION) {
 			Game.createFaction.render(g);
 		}
-		if(Game.State == STATE.CHARACTERCREATE_CLASS) {
+		if (Game.State == STATE.CHARACTERCREATE_CLASS) {
 			Game.race.render(g);
 		}
-		if(Game.State == STATE.CHARACTERCREATE_NAME) {
+		if (Game.State == STATE.CHARACTERCREATE_NAME) {
 			Game.characterFinal.render(g);
-			
+
 		}
 		if (Game.State == STATE.WIN) {
 			g.setFont(new Font("Minecraft", Font.PLAIN, 93));
@@ -197,13 +224,14 @@ public class Game implements Runnable, KeyListener, MouseListener {
 
 	public static void main(String[] args) {
 
-		/*
-		 * File file = new File
-		 * ("./MMO-master/src/grahpics/blackguard/Mage/test.txt"); try { writer
-		 * = new PrintWriter(file); } catch (FileNotFoundException e) { // TODO
-		 * Auto-generated catch block e.printStackTrace(); }
-		 * writer.println("test");
-		 */
+		
+		 File file = new File ("./test.txt"); 
+		 try { 
+			 writer= new PrintWriter(file);
+			 } catch (FileNotFoundException e) { 
+		   e.printStackTrace(); }
+		  writer.println("test");
+		 
 
 		// Creates new instance of Game
 
@@ -231,6 +259,8 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		frame.setLocationRelativeTo(null);
 		frame.addKeyListener(game);
 		frame.addMouseListener(game);
+		frame.addMouseMotionListener(game);
+		
 		// Makes the JFrame visible
 		frame.setVisible(true);
 		// Starts the instance
@@ -262,7 +292,7 @@ public class Game implements Runnable, KeyListener, MouseListener {
 		mouseX = e.getX();
 		mouseY = e.getY();
 		mouse.setBounds(e.getX(), e.getY(), 1, 1);
-	switch(Game.State) {
+		switch (Game.State) {
 		case MENU:
 			if (menu.playButton.contains(mouse)) {
 				player1.health = 100;
@@ -278,72 +308,70 @@ public class Game implements Runnable, KeyListener, MouseListener {
 				Game.State = STATE.CHARACTER;
 			}
 			break;
-			
+
 		case CHARACTER:
-			if (character.createCharacter.contains(mouse)){
+			if (character.createCharacter.contains(mouse)) {
 				Game.State = STATE.CHARACTER_FACTION;
 				System.out.println("Running state: CharacterCreate_FACTION");
 			}
 			break;
 		case CHARACTER_FACTION:
-			if(createFaction.blackguardRect.contains(mouse)) {
+			if (createFaction.blackguardRect.contains(mouse)) {
 				Character.chosenFaction = "blackguard";
 				Game.State = STATE.CHARACTERCREATE_CLASS;
 			}
-			if(createFaction.moonshadowRect.contains(mouse)) {
+			if (createFaction.moonshadowRect.contains(mouse)) {
 				Character.chosenFaction = "moonshadow";
 				Game.State = STATE.CHARACTERCREATE_CLASS;
 			}
 			break;
 		case CHARACTERCREATE_CLASS:
-			switch(Character.chosenFaction) {
+			switch (Character.chosenFaction) {
 			case "moonshadow":
-				if(race.bMageRect.contains(mouse)) {
+				if (race.bMageRect.contains(mouse)) {
 					Game.State = STATE.CHARACTERCREATE_NAME;
 					Character.raceClass = "bmage";
 					System.out.println(Game.State + " " + Character.raceClass);
-					
+
 				}
-				if(race.bHeavyRect.contains(mouse)) {
+				if (race.bHeavyRect.contains(mouse)) {
 					Game.State = STATE.CHARACTERCREATE_NAME;
 					Character.raceClass = "bheavy";
 					System.out.println(Game.State + " " + Character.raceClass);
-					
+
 				}
-				if(race.bArcherRect.contains(mouse)) {
+				if (race.bArcherRect.contains(mouse)) {
 					Game.State = STATE.CHARACTERCREATE_NAME;
 					Character.raceClass = "barcher";
 					System.out.println(Game.State + " " + Character.raceClass);
 				}
 				break;
 			case "blackguard":
-				if(race.rMageRect.contains(mouse)) {
+				if (race.rMageRect.contains(mouse)) {
 					Game.State = STATE.CHARACTERCREATE_NAME;
 					Character.raceClass = "rmage";
 					System.out.println(Game.State + " " + Character.raceClass);
 				}
-				if(race.rHeavyRect.contains(mouse)) {
+				if (race.rHeavyRect.contains(mouse)) {
 					Game.State = STATE.CHARACTERCREATE_NAME;
 					Character.raceClass = "rheavy";
 					System.out.println(Game.State + " " + Character.raceClass);
 				}
-				if(race.rArcherRect.contains(mouse)) {
+				if (race.rArcherRect.contains(mouse)) {
 					Game.State = STATE.CHARACTERCREATE_NAME;
 					Character.raceClass = "rarcher";
 					System.out.println(Game.State + " " + Character.raceClass);
 				}
 				break;
 			}
-			
-			
-			
-			default:
-				Game.State = STATE.MENU;
+
+		default:
+			Game.State = STATE.MENU;
 			break;
-		
+
 		case CHARACTERCREATE_NAME:
-				System.out.println(Game.State);
-			break;	
+			System.out.println(Game.State);
+			break;
 		}
 	}
 
@@ -360,5 +388,17 @@ public class Game implements Runnable, KeyListener, MouseListener {
 	}
 
 	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		mouse.setLocation(e.getX(), e.getY());
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		mouse.setLocation(e.getX(), e.getY());
+
 	}
 }
