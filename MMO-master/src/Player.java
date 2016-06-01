@@ -2,780 +2,403 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
-import java.awt.Shape;
 import java.awt.event.KeyEvent;
-import java.awt.geom.AffineTransform;
+import java.awt.event.KeyListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
+import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.util.Random;
 
-public class Player {
+import javax.swing.JFrame;
 
-	public static enum PLAYERTYPE {
-		MAGE, HEAVY, ARCHER, I_HAVE_LITERALLY_NO_IDEA_OTHER_CLASSES,
+public class Game implements Runnable, KeyListener, MouseListener,
+		MouseMotionListener {
+	public static JFrame frame;
+	public static final int WIDTH = 1280;
+	public static final int HEIGHT = 720;
+	public final String TITLE = "MMO";
+	private boolean running = false;
+	private Thread th;
+	public Player player1, player2;
+	public static Renderer renderer;
+	public static Menu menu;
+	public static Controls controls;
+	public static Character character;
+	public static CharacterFaction faction;
+	public static CharacterClass race;
+	public static CharacterFaction createFaction;
+	public static CharacterFinal characterFinal;
+
+	public static int powerUpTick = 2700;
+
+	public static Random random;
+
+	public int powerTicks = 2700;
+
+	public static Game game;
+	public Rectangle mouse;
+	public Player player;
+	static PrintWriter writer;
+	public Handler handler;
+	public int mouseX, mouseY;
+	public static int winner;
+
+	public boolean playButton, helpButton, quitButton;
+	
+	public static boolean powerUpB = false;
+
+	public static BufferedImage background;
+
+	public BufferedImage rMage, rArcher, rHeavy, bMage, bHeavy, bArcher;
+
+	private BufferedImage images = new BufferedImage(WIDTH, HEIGHT,
+			BufferedImage.TYPE_INT_RGB);
+
+	public static enum STATE {
+		MENU, GAME, PAUSE, CONTROLS, CHARACTER, CHARACTER_FACTION, CHARACTERCREATE_CLASS, CHARACTERCREATE_NAME, CHARACTERSELECT, WIN
 	};
 
-	public int x = 100, y = 100, motionX, motionY, width = 64, height = 64;
+	public static STATE State = STATE.GAME;
 
-	public int health = 100;
+	// /////////////////////////////////////////////////////////////////////////
 
-	public int playerNum;
-
-	public boolean blocking = false;
-
-	public boolean detonate = false;
-
-	public SpriteSheetReader reader;
-
-	public int faction = 1; // 1 blackguard 2 moonshit
-
-	public AffineTransform at;
-
-	public int cool1 = 1000; // cooldown time in milliseconds for main attack
-	public int cool2 = 5000;// cooldown time in milliseconds for the ability
-	public long tack1Start = -cool1, tack2Start = -cool2;
-
-	public int speed = 4;
-
-	public Animation bMageS, bMageD, bMageL, bMageU, bMageR, rMageS, rMageD, rMageL, rMageU, rMageR, bArcherS, bArcherD,
-			bArcherL, bArcherU, bArcherR, rArcherS, rArcherD, rArcherL, rArcherU, rArcherR, bHeavyS, bHeavyD, bHeavyL,
-			bHeavyU, bHeavyR, rHeavyS, rHeavyD, rHeavyL, rHeavyU, rHeavyR;
-
-	public BufferedImage[] bMageSI, bMageDI, bMageLI, bMageUI, bMageRI, rMageSI, rMageDI, rMageLI, rMageUI, rMageRI,
-			bArcherSI, bArcherDI, bArcherLI, bArcherUI, bArcherRI, rArcherSI, rArcherDI, rArcherLI, rArcherUI,
-			rArcherRI, bHeavySI, bHeavyDI, bHeavyLI, bHeavyUI, bHeavyRI, rHeavySI, rHeavyDI, rHeavyLI, rHeavyUI,
-			rHeavyRI;
-
-	public int pointing = 1; // 1 up 2 right 3 down 4 left
-
-	public Rectangle front, back, left, right, player;
-	public Rectangle frontB, backB, leftB, rightB, playerB;
-	public Rectangle playerShoot;
-
-	public Rectangle screenTop, screenBottom, screenLeft, screenRight;
-
-	public PLAYERTYPE type;
-
-	public Player(PLAYERTYPE p, int playerNumber) {
-		reader = new SpriteSheetReader();
-		this.playerNum = playerNumber;
-		if (playerNum == 2) {
-			x = 700;
-			y = 100;
-		}
-		front = new Rectangle(x, y, 64, 0);
-		back = new Rectangle(x, y + 63, 64, 1);
-		left = new Rectangle(x, y, 1, 64);
-		right = new Rectangle(x + 63, y, 1, 64);
-		player = new Rectangle(x, y, 64, 64);
-		playerB = player.getBounds();
-		screenTop = new Rectangle(0, 0, 1280, 1);
-		screenBottom = new Rectangle(0, 720, 1280, 1);
-		screenLeft = new Rectangle(0, 0, 1, 720);
-		screenRight = new Rectangle(1280, 0, 1, 720);
-		playerShoot = new Rectangle(x - 16, y - 16, 96, 96);
-		this.type = p;
-		bMageSI = reader.getSprites(4, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGES.png"));
-		bMageS = new Animation(9, bMageSI[0], bMageSI[1], bMageSI[2], bMageSI[3]);
-		bMageUI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGEU.png"));
-		bMageU = new Animation(3, bMageUI[0], bMageUI[1], bMageUI[2], bMageUI[3], bMageUI[4], bMageUI[5]);
-		bMageDI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGED.png"));
-		bMageD = new Animation(3, bMageDI[0], bMageDI[1], bMageDI[2], bMageDI[3], bMageDI[4], bMageDI[5]);
-		bMageRI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGER.png"));
-		bMageR = new Animation(3, bMageRI[0], bMageRI[1], bMageRI[2], bMageRI[3], bMageRI[4], bMageRI[5]);
-		bMageLI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGEL.png"));
-		bMageL = new Animation(3, bMageLI[0], bMageLI[1], bMageLI[2], bMageLI[3], bMageLI[4], bMageLI[5]);
-		bHeavySI = reader.getSprites(4,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/heavy/HEAVYS.png"));
-		bHeavyS = new Animation(9, bHeavySI[0], bHeavySI[1], bHeavySI[2], bHeavySI[3]);
-		bHeavyUI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/heavy/HEAVYU.png"));
-		bHeavyU = new Animation(3, bHeavyUI[0], bHeavyUI[1], bHeavyUI[2], bHeavyUI[3], bHeavyUI[4], bHeavyUI[5]);
-		bHeavyDI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/heavy/HEAVYD.png"));
-		bHeavyD = new Animation(3, bHeavyDI[0], bHeavyDI[1], bHeavyDI[2], bHeavyDI[3], bHeavyDI[4], bHeavyDI[5]);
-		bHeavyLI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/heavy/HEAVYL.png"));
-		bHeavyL = new Animation(3, bHeavyLI[0], bHeavyLI[1], bHeavyLI[2], bHeavyLI[3], bHeavyLI[4], bHeavyLI[5]);
-		bHeavyRI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/heavy/HEAVYR.png"));
-		bHeavyR = new Animation(3, bHeavyRI[0], bHeavyRI[1], bHeavyRI[2], bHeavyRI[3], bHeavyRI[4], bHeavyRI[5]);
-		bArcherSI = reader.getSprites(4,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Archer/ARCHERS.png"));
-		bArcherS = new Animation(9, bArcherSI[0], bArcherSI[1], bArcherSI[2], bArcherSI[3]);
-		bArcherUI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Archer/ARCHERU.png"));
-		bArcherU = new Animation(3, bArcherUI[0], bArcherUI[1], bArcherUI[2], bArcherUI[3], bArcherUI[4], bArcherUI[5]);
-		bArcherDI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Archer/ARCHERD.png"));
-		bArcherD = new Animation(3, bArcherDI[0], bArcherDI[1], bArcherDI[2], bArcherDI[3], bArcherDI[4], bArcherDI[5]);
-		bArcherLI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Archer/ARCHERL.png"));
-		bArcherL = new Animation(3, bArcherLI[0], bArcherLI[1], bArcherLI[2], bArcherLI[3], bArcherLI[4], bArcherLI[5]);
-		bArcherRI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Archer/ARCHERR.png"));
-		bArcherR = new Animation(3, bArcherRI[0], bArcherRI[1], bArcherRI[2], bArcherRI[3], bArcherRI[4], bArcherRI[5]);
-		bMageSI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/blackguard/Mage/MAGES.png"));
-
-		rMageSI = reader.getSprites(4, imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Mage/MAGES.png"));
-		rMageS = new Animation(9, rMageSI[0], rMageSI[1], rMageSI[2], rMageSI[3]);
-		rMageUI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Mage/MAGEU.png"));
-		rMageU = new Animation(3, rMageUI[0], rMageUI[1], rMageUI[2], rMageUI[3], rMageUI[4], rMageUI[5]);
-		rMageDI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Mage/MAGED.png"));
-		rMageD = new Animation(3, rMageDI[0], rMageDI[1], rMageDI[2], rMageDI[3], rMageDI[4], rMageDI[5]);
-		rMageRI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Mage/MAGER.png"));
-		rMageR = new Animation(3, rMageRI[0], rMageRI[1], rMageRI[2], rMageRI[3], rMageRI[4], rMageRI[5]);
-		rMageLI = reader.getSprites(6, imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Mage/MAGEL.png"));
-		rMageL = new Animation(3, rMageLI[0], rMageLI[1], rMageLI[2], rMageLI[3], rMageLI[4], rMageLI[5]);
-		rHeavySI = reader.getSprites(4,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/heavy/HEAVYS.png"));
-		rHeavyS = new Animation(9, rHeavySI[0], rHeavySI[1], rHeavySI[2], rHeavySI[3]);
-		rHeavyUI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/heavy/HEAVYU.png"));
-		rHeavyU = new Animation(3, rHeavyUI[0], rHeavyUI[1], rHeavyUI[2], rHeavyUI[3], rHeavyUI[4], rHeavyUI[5]);
-		rHeavyDI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/heavy/HEAVYD.png"));
-		rHeavyD = new Animation(3, rHeavyDI[0], rHeavyDI[1], rHeavyDI[2], rHeavyDI[3], rHeavyDI[4], rHeavyDI[5]);
-		rHeavyLI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/heavy/HEAVYL.png"));
-		rHeavyL = new Animation(3, rHeavyLI[0], rHeavyLI[1], rHeavyLI[2], rHeavyLI[3], rHeavyLI[4], rHeavyLI[5]);
-		rHeavyRI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/heavy/HEAVYR.png"));
-		rHeavyR = new Animation(3, rHeavyRI[0], rHeavyRI[1], rHeavyRI[2], rHeavyRI[3], rHeavyRI[4], rHeavyRI[5]);
-		rArcherSI = reader.getSprites(4,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Archer/ARCHERS.png"));
-		rArcherS = new Animation(9, rArcherSI[0], rArcherSI[1], rArcherSI[2], rArcherSI[3]);
-		rArcherUI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Archer/ARCHERU.png"));
-		rArcherU = new Animation(3, rArcherUI[0], rArcherUI[1], rArcherUI[2], rArcherUI[3], rArcherUI[4], rArcherUI[5]);
-		rArcherDI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Archer/ARCHERD.png"));
-		rArcherD = new Animation(3, rArcherDI[0], rArcherDI[1], rArcherDI[2], rArcherDI[3], rArcherDI[4], rArcherDI[5]);
-		rArcherLI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Archer/ARCHERL.png"));
-		rArcherL = new Animation(3, rArcherLI[0], rArcherLI[1], rArcherLI[2], rArcherLI[3], rArcherLI[4], rArcherLI[5]);
-		rArcherRI = reader.getSprites(6,
-				imageLoader.imageLoader("./MMO-master/src/grahpics/moonshadow/Archer/ARCHERR.png"));
-		rArcherR = new Animation(3, rArcherRI[0], rArcherRI[1], rArcherRI[2], rArcherRI[3], rArcherRI[4], rArcherRI[5]);
-
+	public void init() {
+		menu = new Menu();
+		controls = new Controls();
+		mouse = new Rectangle();
+		player1 = new Player(Player.PLAYERTYPE.MAGE, 1);
+		player2 = new Player(Player.PLAYERTYPE.ARCHER, 2);
+		player1.setPlayerType(Player.PLAYERTYPE.HEAVY, 1);
+		player2.setPlayerType(Player.PLAYERTYPE.ARCHER, 2);
+		rMage = player1.rMageSI[1];
+		rArcher = player1.rArcherSI[1];
+		rHeavy = player1.rHeavySI[1];
+		bMage = player1.bMageSI[1];
+		bArcher = player1.bArcherSI[1];
+		bHeavy = player1.bHeavySI[1];
+		handler = new Handler();
+		random = new Random();
+		character = new Character();
+		createFaction = new CharacterFaction();
+		background = imageLoader
+				.imageLoader("./MMO-master/src/grahpics/arenaSet.jpg");
+		race = new CharacterClass();
+		characterFinal = new CharacterFinal();
 	}
 
-	public void render(Graphics2D g) {
-		// g.drawImage(imageLoader.imageLoader("./MAGE.png"), 0, 0, null);
-		g.setColor(Color.black);
-		g.drawLine(0, 20, 1280, 20);
-		// g.drawRect(x, y, 64, 64);
-		// g.rotate(Math.toRadians(pointing), x + 16, y + 16);
-		g.draw(playerB);
-		g.setColor(Color.red);
-		g.draw(front);
-		if (front.intersects(screenTop)) {
-		//	System.out.println("yay");
-		}
-		if (this.health <= 0) {
-			if (this.playerNum == 1) {
-				Game.winner = 2;
-			}
-			if (this.playerNum == 2) {
-				Game.winner = 1;
-			}
-			Game.State = Game.STATE.WIN;
-		}
-		if (motionX != 0 || motionY != 0) {
-			if (faction == 1) {
-				if (this.type == PLAYERTYPE.HEAVY) {
-					switch (pointing) {
-					case 1:
-						rHeavyU.drawAnimation(g, x, y, 0);
-						break;
-					case 2:
-						rHeavyR.drawAnimation(g, x, y, 0);
-						break;
-					case 3:
-						rHeavyD.drawAnimation(g, x, y, 0);
-						break;
-					case 4:
-						rHeavyL.drawAnimation(g, x, y, 0);
-						break;
-					}
-					
-				} else if (this.type == PLAYERTYPE.MAGE) {
-					switch (pointing) {
-					case 1:
-						rMageU.drawAnimation(g, x, y, 0);
-						break;
-					case 2:
-						rMageR.drawAnimation(g, x, y, 0);
-						break;
-					case 3:
-						rMageD.drawAnimation(g, x, y, 0);
-						break;
-					case 4:
-						rMageL.drawAnimation(g, x, y, 0);
-						break;
-					}
-				} else if (this.type == PLAYERTYPE.ARCHER) {
-					switch (pointing) {
-					case 1:
-						rArcherU.drawAnimation(g, x, y, 0);
-						break;
-					case 2:
-						rArcherR.drawAnimation(g, x, y, 0);
-						break;
-					case 3:
-						rArcherD.drawAnimation(g, x, y, 0);
-						break;
-					case 4:
-						rArcherL.drawAnimation(g, x, y, 0);
-						break;
-					}
-				}
-			} else {
-				if (this.type == PLAYERTYPE.HEAVY) {
-					switch (pointing) {
-					case 1:
-						bHeavyU.drawAnimation(g, x, y, 0);
-						break;
-					case 2:
-						bHeavyR.drawAnimation(g, x, y, 0);
-						break;
-					case 3:
-						bHeavyD.drawAnimation(g, x, y, 0);
-						break;
-					case 4:
-						bHeavyL.drawAnimation(g, x, y, 0);
-						break;
-
-					}
-				} else if (this.type == PLAYERTYPE.MAGE) {
-					switch (pointing) {
-					case 1:
-						bMageU.drawAnimation(g, x, y, 0);
-						break;
-					case 2:
-						bMageR.drawAnimation(g, x, y, 0);
-						break;
-					case 3:
-						bMageD.drawAnimation(g, x, y, 0);
-						break;
-					case 4:
-						bMageL.drawAnimation(g, x, y, 0);
-						break;
-					}
-				} else if (this.type == PLAYERTYPE.ARCHER) {
-					switch (pointing) {
-					case 1:
-						bArcherU.drawAnimation(g, x, y, 0);
-						break;
-					case 2:
-						bArcherR.drawAnimation(g, x, y, 0);
-						break;
-					case 3:
-						bArcherD.drawAnimation(g, x, y, 0);
-						break;
-					case 4:
-						bArcherL.drawAnimation(g, x, y, 0);
-						break;
-					}
-				}
-			}
-		} else {
-			if (faction == 1) {
-				if (this.type == PLAYERTYPE.ARCHER) {
-					rArcherS.drawAnimation(g, x, y, 0);
-				} else if (this.type == PLAYERTYPE.HEAVY) {
-					rHeavyS.drawAnimation(g, x, y, 0);
-				} else if (this.type == PLAYERTYPE.MAGE) {
-					rMageS.drawAnimation(g, x, y, 0);
-				}
-			} else {
-				if (this.type == PLAYERTYPE.ARCHER) {
-					bArcherS.drawAnimation(g, x, y, 0);
-				} else if (this.type == PLAYERTYPE.HEAVY) {
-					bHeavyS.drawAnimation(g, x, y, 0);
-				} else if (this.type == PLAYERTYPE.MAGE) {
-					bMageS.drawAnimation(g, x, y, 0);
-				}
-			}
-		}
-		g.setFont(new Font("Minecraft", Font.PLAIN, 10));
-		g.drawString("" + health, x, y);
-
-		g.draw(playerShoot);
-
+	public Game() {
+		renderer = new Renderer();
 	}
 
-	public void tick() {
-		at = AffineTransform.getRotateInstance(Math.toRadians(pointing), x + 16, y + 16);
-		switch (pointing) {
-		case 1:
-			front.setBounds(x, y, 64, 1);
-			back.setBounds(x, y + 63, 64, 1);
-			left.setBounds(x, y, 1, 64);
-			right.setBounds(x + 63, y, 1, 64);
-			player.setLocation(x, y);
-			playerB.setLocation(x, y);
-			break;
-		case 2:
-			front.setBounds(x + 63, y, 1, 64);
-			back.setBounds(x, y, 1, 64);
-			left.setBounds(x, y, 64, 1);
-			right.setBounds(x, y + 63, 64, 1);
-			player.setLocation(x, y);
-			playerB.setLocation(x, y);
-			break;
-		case 3:
-			front.setBounds(x, y + 63, 64, 1);
-			back.setBounds(x, y, 64, 1);
-			left.setBounds(x + 63, y, 1, 64);
-			right.setBounds(x, y, 1, 64);
-			player.setLocation(x, y);
-			playerB.setLocation(x, y);
-			break;
-		case 4:
-			front.setBounds(x, y, 1, 64);
-			back.setBounds(x + 63, y, 1, 64);
-			left.setBounds(x, y + 63, 64, 1);
-			right.setBounds(x, y, 64, 1);
-			player.setLocation(x, y);
-			playerB.setLocation(x, y);
-			break;
-		}
-		
-		//System.out.println("pointing = " + pointing);
-		
-		playerShoot.setLocation(x - 16, y-16);
-		if (motionX != 0 || motionY != 0) {
-			if (faction == 2) {
-				if (this.type == PLAYERTYPE.HEAVY) {
-					switch (pointing) {
-					case 1:
-						bHeavyU.runAnimation();
-						break;
-					case 2:
-						bHeavyR.runAnimation();
-						break;
-					case 3:
-						bHeavyD.runAnimation();
-						break;
-					case 4:
-						bHeavyL.runAnimation();
-						break;
-					}
-				} else if (this.type == PLAYERTYPE.MAGE) {
-					switch (pointing) {
-					case 1:
-						bMageU.runAnimation();
-						break;
-					case 2:
-						bMageR.runAnimation();
-						break;
-					case 3:
-						bMageD.runAnimation();
-						break;
-					case 4:
-						bMageL.runAnimation();
-						break;
-					}
-				} else if (this.type == PLAYERTYPE.ARCHER) {
-					switch (pointing) {
-					case 1:
-						bArcherU.runAnimation();
-						break;
-					case 2:
-						bArcherR.runAnimation();
-						break;
-					case 3:
-						bArcherD.runAnimation();
-						break;
-					case 4:
-						bArcherL.runAnimation();
-						break;
-					}
-				}
-			} else {
-				if (this.type == PLAYERTYPE.HEAVY) {
-					switch (pointing) {
-					case 1:
-					rHeavyU.runAnimation();
-						break;
-					case 2:
-						rHeavyR.runAnimation();
-						break;
-					case 3:
-						rHeavyD.runAnimation();
-						break;
-					case 4:
-						rHeavyL.runAnimation();
-						break;
+	private synchronized void start() {
+		// If the program is already running then do nothing but if not running,
+		// make it run and start the thread
+		if (running)
+			return;
+		running = true;
+		th = new Thread(this);
+		th.start();
+	}
 
-					}
-				} else if (this.type == PLAYERTYPE.MAGE) {
-					switch (pointing) {
-					case 1:
-						rMageU.runAnimation();
-						break;
-					case 2:
-						rMageR.runAnimation();
-						break;
-					case 3:
-						rMageD.runAnimation();
-						break;
-					case 4:
-						rMageL.runAnimation();
-						break;
-					}
-				} else if (this.type == PLAYERTYPE.ARCHER) {
-					switch (pointing) {
-					case 1:
-						rArcherU.runAnimation();
-						break;
-					case 2:
-						rArcherR.runAnimation();
-						break;
-					case 3:
-						rArcherD.runAnimation();
-						break;
-					case 4:
-						rArcherL.runAnimation();
-						break;
-					}
-				}
-				}
-		}else {
-					if (faction == 1) {
-						if (this.type == PLAYERTYPE.ARCHER) {
-							rArcherS.runAnimation();
-						} else if (this.type == PLAYERTYPE.HEAVY) {
-							rHeavyS.runAnimation();
-						} else if (this.type == PLAYERTYPE.MAGE) {
-							rMageS.runAnimation();
-						}
-					} else {
-						if (this.type == PLAYERTYPE.ARCHER) {
-							bArcherS.runAnimation();
-						} else if (this.type == PLAYERTYPE.HEAVY) {
-							bHeavyS.runAnimation();
-						} else if (this.type == PLAYERTYPE.MAGE) {
-							bMageS.runAnimation();
-						}
-					}
-				}
+	private synchronized void stop() {
+		if (!running)
+			return;
+		running = false;
+		try {
+			th.join();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		System.exit(1);
+	}
+
+	public void run() {
+		init();
+		long lastTime = System.nanoTime();
+		final double numberOfTicks = 60.0;
+		double ns = 1000000000 / numberOfTicks;
+		double delta = 0;
+		int updates = 0;
+		int frames = 0;
+		long timer = System.currentTimeMillis();
+
+		while (running) {
+			long now = System.nanoTime();
+			delta += (now - lastTime) / ns;
+			lastTime = now;
+			if (delta >= 1) {
+				tick();
+				delta--;
+				updates++;
+			}
+			// ();
+			frames++;
+
+			if (System.currentTimeMillis() - timer > 1000) {
+				timer += 1000;
+				System.out.println("Ticks: " + updates
+						+ "      Frames Per Second(FPS): " + frames);
+				updates = 0;
+				frames = 0;
+			}
+		}
+		stop();
+	}
+
+	private void tick() {
+		renderer.repaint();
+		game.player1.tick();
+		game.player2.tick();
+		handler.tick();
+		powerTicks++;
+		powerTicks++;
+		if (powerTicks > powerUpTick && powerUpB == false) {
+			powerUp powerUp = new powerUp(random.nextInt(1280),
+					random.nextInt(720), ID.PowerUp);
+			this.handler.addObject(powerUp);
+			powerUpB = true;
+			powerTicks = 0;
+			System.out.println("should be spawning");
+		}
+		if (Game.State == STATE.MENU) {
+			if (mouse.intersects(menu.playButton)) {
+				System.out.println("yay");
+				playButton = true;
+			}else{
+				playButton = false;
+			}
+			if (mouse.intersects(menu.helpButton)) {
+				helpButton = true;
+			}else{
+				helpButton = false;
+			}
+			if (mouse.intersects(menu.quitButton)) {
+				quitButton = true;
+			}else{
+				quitButton = false;
+			}
+		}
+	}
+
+	static void render(Graphics2D g) {
+		if (Game.State == STATE.MENU) {
+			g.setColor(Color.BLACK);
+			g.fillRect(0, 0, WIDTH, HEIGHT);
+			menu.render(g);
 			
-	
-		// if(player.getX() + 64 + speed > 1280 || player.getX() - speed < 0){
-		// motionX = 0;
-		// }
-		// System.out.println(x + ", " + y);
-		if (playerB.getX() + speed + 20 + playerB.getWidth() > 1280) {
-			motionX = 0;
-			x--;
+			
+			
 		}
+		if (Game.State == STATE.CONTROLS) {
+			controls.render(g);
+		}
+		if (Game.State == STATE.GAME) {
+			g.drawImage(background, 0, 0, 1280, 720, null);
+			game.player1.render(g);
+			game.player2.render(g);
+			game.handler.render(g);
+		}
+		if (Game.State == STATE.CHARACTER) {
+			Game.character.render(g);
+		}
+		if (Game.State == STATE.CHARACTER_FACTION) {
+			Game.createFaction.render(g);
+		}
+		if (Game.State == STATE.CHARACTERCREATE_CLASS) {
+			Game.race.render(g);
+		}
+		if (Game.State == STATE.CHARACTERCREATE_NAME) {
+			Game.characterFinal.render(g);
 
-		if (playerB.getX() - speed - 20 < 0) {
-			motionX = 0;
-			x++;
 		}
-		if (playerB.getY() + speed + 20 + playerB.getHeight() > 720) {
-			motionY = 0;
-			y--;
+		if (Game.State == STATE.WIN) {
+			g.setFont(new Font("Minecraft", Font.PLAIN, 93));
+			g.setColor(Color.BLACK);
+			g.drawString("Player" + Game.winner + " WINS", 0, 100);
 		}
-		if (playerB.getY() - speed - 20 < 0) {
-			motionY = 0;
-			y++;
-		}
-		if (playerNum == 1) {
-			if (this.player.intersects(Game.game.player2.player)) {
-				motionX = motionX * -1;
-				motionY = motionY * -1;
-				x += motionX;
-				x += motionX;
-				y += motionY;
-				y += motionY;
-				motionX = motionX * -1;
-				motionY = motionY * -1;
-			}
-		}
+	}
 
-		if (playerNum == 2) {
-			if (this.player.intersects(Game.game.player1.player)) {
-				motionX = motionX * -1;
-				motionY = motionY * -1;
-				x += motionX;
-				x += motionX;
-				y += motionY;
-				y += motionY;
-				motionX = motionX * -1;
-				motionY = motionY * -1;
-			}
-		}
-		if (blocking == false) {
-			x += motionX;
-			y += motionY;
-		}else{
-			motionX = 0;
-			motionY = 0;
-		}
+	public static void main(String[] args) {
+
 		
+		 File file = new File ("./test.txt"); 
+		 try { 
+			 writer= new PrintWriter(file);
+			 } catch (FileNotFoundException e) { 
+		   e.printStackTrace(); }
+		  writer.println("test");
+		 
+
+		// Creates new instance of Game
+
+		game = new Game();
+		// Sets the maximum, minimum and preferred sizes of the JFrame
+		/*
+		 * game.setPreferredSize(new Dimension(WIDTH, HEIGHT));
+		 * game.setMaximumSize(new Dimension(WIDTH, HEIGHT));
+		 * game.setMinimumSize(new Dimension(WIDTH, HEIGHT));
+		 */
+
+		// Sets the title of the JFrame
+		frame = new JFrame(game.TITLE);
+		// Ads the instance of the game to the JFrame
+		// frame.add(game);
+		// Causes the window to be at preferred size initially
+		frame.setSize(WIDTH, HEIGHT);
+		// frame.pack();
+		// Exits program on close
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		// Sets the program so it cannot be re-sizable
+		frame.setResizable(false);
+		frame.add(renderer);
+		// Disables the setLocationRelativeTo function
+		frame.setLocationRelativeTo(null);
+		frame.addKeyListener(game);
+		frame.addMouseListener(game);
+		frame.addMouseMotionListener(game);
+		
+		// Makes the JFrame visible
+		frame.setVisible(true);
+		// Starts the instance
+		game.start();
+
 	}
 
-	public void control(KeyEvent e, boolean pressed) {
-		if (playerNum == 1) {
-			if (pressed) {
-				if (e.getKeyCode() == KeyEvent.VK_W) {
-					motionY = -speed;
-					pointing = 1;
-					if (playerB.getY() - speed - 20 < 0) {
-						motionY = 0;
-						y++;
-					}
-				}
-				if (e.getKeyCode() == KeyEvent.VK_S) {
-					motionY = speed;
-					pointing = 3;
-					if (playerB.getY() + speed + 20 + playerB.getHeight() > 720) {
-						motionY = 0;
-						y--;
-					}
-
-				}
-				if (e.getKeyCode() == KeyEvent.VK_A) {
-					motionX = -speed;
-					pointing = 4;
-					if (playerB.getX() - speed - 20 < 0) {
-						motionX = 0;
-						x++;
-					}
-
-				}
-				if (e.getKeyCode() == KeyEvent.VK_D) {
-					motionX = speed;
-					pointing = 2;
-					if (playerB.getX() + speed + 20 + playerB.getWidth() > 1280) {
-						motionX = 0;
-						x--;
-					}
-				}
-				if (e.getKeyCode() == KeyEvent.VK_Q) {
-					if (System.currentTimeMillis() - tack1Start > cool1) {
-						tack1Start = System.currentTimeMillis();
-						attack();
-					}
-				}
-				if (e.getKeyCode() == KeyEvent.VK_E) {
-					if (this.type == PLAYERTYPE.HEAVY) {
-						blocking = true;
-					}
-					if (System.currentTimeMillis() - tack2Start > cool2) {
-						tack2Start = System.currentTimeMillis();
-						ability();
-					}
-				}
-				if (e.getKeyCode() == KeyEvent.VK_R) {
-					detonate = true;
-				}
-
+	public void keyPressed(KeyEvent e) {
+		if (Game.State == STATE.CONTROLS || Game.State == STATE.WIN) {
+			if (e.getKeyCode() == KeyEvent.VK_ESCAPE) {
+				Game.State = STATE.MENU;
 			}
-			if (!pressed) {
-				if (e.getKeyCode() == KeyEvent.VK_W) {
-					motionY = 0;
-					 
-				}
-				if (e.getKeyCode() == KeyEvent.VK_S) {
-					motionY = 0;
-					 
-				}
-				if (e.getKeyCode() == KeyEvent.VK_A) {
-					motionX = 0;
-					 
-				}
-				if (e.getKeyCode() == KeyEvent.VK_D) {
-					motionX = 0;
-					 
-				}
-				if (e.getKeyCode() == KeyEvent.VK_R) {
-					detonate = false;
-				}
-				if (e.getKeyCode() == KeyEvent.VK_E) {
-					if (this.type == PLAYERTYPE.HEAVY) {
-						blocking = false;
-					}
-				}
-			}
-		} else {
-			if (pressed) {
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
-					motionY = -speed;
-					pointing = 1;
-					if (playerB.getY() - speed - 20 < 0) {
-						motionY = 0;
-						y++;
-					}
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD5) {
-					motionY = speed;
-					pointing = 3;
-					if (playerB.getY() + speed + 20 + playerB.getHeight() > 720) {
-						motionY = 0;
-						y--;
-					}
-
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
-					motionX = -speed;
-					pointing = 4;
-					if (playerB.getX() - speed - 20 < 0) {
-						motionX = 0;
-						x++;
-					}
-
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
-					motionX = speed;
-					pointing = 2;
-					if (playerB.getX() + speed + 20 + playerB.getWidth() > 1280) {
-						motionX = 0;
-						x--;
-					}
-				}
-				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
-					if (System.currentTimeMillis() - tack1Start > cool1) {
-						tack1Start = System.currentTimeMillis();
-						attack();
-					}
-				}
-
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD0) {
-					if (this.type == PLAYERTYPE.HEAVY) {
-						blocking = true;
-					}
-					if (System.currentTimeMillis() - tack2Start > cool2) {
-						tack2Start = System.currentTimeMillis();
-						ability();
-					}
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
-					detonate = true;
-				}
-			}
-			if (!pressed) {
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD8) {
-					motionY = 0;
-					 
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD5) {
-					motionY = 0;
-					 
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD4) {
-					motionX = 0;
-					 
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD6) {
-					motionX = 0;
-					 
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD2) {
-					detonate = false;
-				}
-				if (e.getKeyCode() == KeyEvent.VK_NUMPAD0) {
-					if (this.type == PLAYERTYPE.HEAVY) {
-						blocking = false;
-					}
-				}
-			}
+		}
+		if (Game.State == STATE.GAME) {
+			game.player1.control(e, true);
+			game.player2.control(e, true);
 		}
 	}
 
-	public int[] shotPoint(){
-		int[] point = new int[2];
-		switch(pointing){
-		case 1:
-			point[0] = (int) ((playerShoot.getWidth() / 2) + playerShoot.getX());
-			point[1] = (int)playerShoot.getY();
+	public void keyReleased(KeyEvent e) {
+		if (Game.State == STATE.GAME) {
+			game.player1.control(e, false);
+			game.player2.control(e, false);
+		}
+
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		mouseX = e.getX();
+		mouseY = e.getY();
+		mouse.setBounds(e.getX(), e.getY(), 1, 1);
+		switch (Game.State) {
+		case MENU:
+			if (menu.playButton.contains(mouse)) {
+				player1.health = 100;
+				player2.health = 100;
+				player1.x = 100;
+				player2.x = 700;
+				player1.y = 100;
+				player2.y = 100;
+
+				player1.pointing = 0;
+				player2.pointing = 0;
+
+				Game.State = STATE.CHARACTER;
+			}
 			break;
-		case 2:
-			point[0] = (int) (playerShoot.getWidth() + playerShoot.getX());
-			point[1] = (int)(playerShoot.getY() + (playerShoot.getHeight()/2));
+
+		case CHARACTER:
+			if (character.createCharacter.contains(mouse)) {
+				Game.State = STATE.CHARACTER_FACTION;
+				System.out.println("Running state: CharacterCreate_FACTION");
+			}
 			break;
-		case 3:
-			point[0] = (int) ((playerShoot.getWidth() / 2) + playerShoot.getX());
-			point[1] = (int)(playerShoot.getY() + playerShoot.getHeight());
+		case CHARACTER_FACTION:
+			if (createFaction.blackguardRect.contains(mouse)) {
+				Character.chosenFaction = "blackguard";
+				Game.State = STATE.CHARACTERCREATE_CLASS;
+			}
+			if (createFaction.moonshadowRect.contains(mouse)) {
+				Character.chosenFaction = "moonshadow";
+				Game.State = STATE.CHARACTERCREATE_CLASS;
+			}
 			break;
-		case 4:
-			point[0] = (int) (playerShoot.getX());
-			point[1] = (int)(playerShoot.getY() + (playerShoot.getHeight()/2));
+		case CHARACTERCREATE_CLASS:
+			switch (Character.chosenFaction) {
+			case "moonshadow":
+				if (race.bMageRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "bmage";
+					System.out.println(Game.State + " " + Character.raceClass);
+
+				}
+				if (race.bHeavyRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "bheavy";
+					System.out.println(Game.State + " " + Character.raceClass);
+
+				}
+				if (race.bArcherRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "barcher";
+					System.out.println(Game.State + " " + Character.raceClass);
+				}
+				break;
+			case "blackguard":
+				if (race.rMageRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "rmage";
+					System.out.println(Game.State + " " + Character.raceClass);
+				}
+				if (race.rHeavyRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "rheavy";
+					System.out.println(Game.State + " " + Character.raceClass);
+				}
+				if (race.rArcherRect.contains(mouse)) {
+					Game.State = STATE.CHARACTERCREATE_NAME;
+					Character.raceClass = "rarcher";
+					System.out.println(Game.State + " " + Character.raceClass);
+				}
+				break;
+			}
+
+		default:
+			Game.State = STATE.MENU;
+			break;
+
+		case CHARACTERCREATE_NAME:
+			System.out.println(Game.State);
 			break;
 		}
-		return point;
-	}
-	
-	
-	public void attack() {
-		int[] point = shotPoint();
-		if (this.type == PLAYERTYPE.ARCHER) {
-			Projectile arrow1 = new Projectile(point[0], point[1], ID.Arrow, this);
-			Game.game.handler.addObject(arrow1);
-
-		}
-		if (this.type == PLAYERTYPE.MAGE) {
-			Projectile magic1 = new Projectile(point[0], point[1], ID.magic, this);
-			Game.game.handler.addObject(magic1);
-
-		}
-		if (this.type == PLAYERTYPE.HEAVY) {
-			Projectile melee1 = new Projectile(point[0], point[1], ID.Melee, this);
-			Game.game.handler.addObject(melee1);
-
-		}
 	}
 
-	public void setPlayerType(PLAYERTYPE type, int faction) {
-		this.type = type;
-		this.faction = faction;
-		if (this.type == PLAYERTYPE.HEAVY) {
-			this.health = 300;
-		}
-		if (this.type == PLAYERTYPE.MAGE) {
-			this.health = 60;
-		}
+	public void mouseEntered(MouseEvent e) {
 	}
 
-	
-	public void reset(){
-		motionX = 0;
-		motionY = 0; 
-		health = 100;
-		if (this.type == PLAYERTYPE.HEAVY) {
-			this.health = 300;
-		}
-		if (this.type == PLAYERTYPE.MAGE) {
-			this.health = 60;
-		}
-		blocking = false;
-		detonate = false;
+	public void mouseExited(MouseEvent e) {
 	}
-	
-	
-	public void ability() {
-		int[] point = shotPoint();
-		if (this.type == PLAYERTYPE.HEAVY) {
 
-		}
-		if (this.type == PLAYERTYPE.MAGE) {
-			Projectile melee1 = new Projectile(point[0], point[1], ID.Mage_Ability, this);
-			Game.game.handler.addObject(melee1);
-		}
-		if (this.type == PLAYERTYPE.ARCHER) {
-			long start = 10;
-			int n = 0;
-			while (n < 6) {
-				if (start - System.currentTimeMillis() < -9) {
-					Projectile melee1 = new Projectile(point[0], point[1], ID.Arrow, this);
-					Game.game.handler.addObject(melee1);
-					start = System.currentTimeMillis();
-					System.out.println("test" + n);
-					n++;
-				}
-			}
-		}
+	public void mousePressed(MouseEvent e) {
+	}
+
+	public void mouseReleased(MouseEvent e) {
+	}
+
+	public void keyTyped(KeyEvent e) {
+	}
+
+	@Override
+	public void mouseDragged(MouseEvent e) {
+		mouse.setLocation(e.getX(), e.getY());
+
+	}
+
+	@Override
+	public void mouseMoved(MouseEvent e) {
+		mouse.setLocation(e.getX(), e.getY());
+
 	}
 }
