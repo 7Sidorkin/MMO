@@ -21,7 +21,7 @@ public class Menu {
 		
 	public void render(Graphics g){
 		Graphics2D g2d = (Graphics2D) g;
-		FontLoader.loadFont("./Minecraft.ttf");
+		FontLoader.loadFont("./MMO-master/Minecraft.ttf");
 		Font titleFont = new Font("Minecraft",Font.PLAIN, 93);
 		Font buttonFont = new Font("Minecraft",Font.PLAIN, 50);
 		
