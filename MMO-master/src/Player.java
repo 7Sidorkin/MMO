@@ -13,14 +13,14 @@ public class Player {
 		MAGE, HEAVY, ARCHER, I_HAVE_LITERALLY_NO_IDEA_OTHER_CLASSES,
 	};
 
-	public int x = 100, y = 100, motionX, motionY, width = 64, height = 64;
+	public int x = 100, y = 100, motionX, motionY, width = 48, height = 64, offSet = 8;
 
 	public int health = 100;
 
 	public int playerNum;
 
 	public boolean blocking = false;
-
+	
 	public boolean detonate = false;
 
 	public SpriteSheetReader reader;
@@ -33,7 +33,7 @@ public class Player {
 	public int cool2 = 5000;// cooldown time in milliseconds for the ability
 	public long tack1Start = -cool1, tack2Start = -cool2;
 
-	public int speed = 4;
+	public int speed = 2;
 
 	public Animation bMageS, bMageD, bMageL, bMageU, bMageR, rMageS, rMageD, rMageL, rMageU, rMageR, bArcherS, bArcherD,
 			bArcherL, bArcherU, bArcherR, rArcherS, rArcherD, rArcherL, rArcherU, rArcherR, bHeavyS, bHeavyD, bHeavyL,
@@ -61,11 +61,11 @@ public class Player {
 			x = 700;
 			y = 100;
 		}
-		front = new Rectangle(x, y, 64, 0);
-		back = new Rectangle(x, y + 63, 64, 1);
-		left = new Rectangle(x, y, 1, 64);
-		right = new Rectangle(x + 63, y, 1, 64);
-		player = new Rectangle(x, y, 64, 64);
+		front = new Rectangle(x + offSet, y, width, 0);
+		back = new Rectangle(x + offSet, y + height - 1, width, 1);
+		left = new Rectangle(x + offSet, y, 1, height);
+		right = new Rectangle(x + width -1 , y, 1, height);
+		player = new Rectangle(x + offSet, y, width, height);
 		playerB = player.getBounds();
 		screenTop = new Rectangle(0, 0, 1280, 1);
 		screenBottom = new Rectangle(0, 720, 1280, 1);
@@ -160,13 +160,13 @@ public class Player {
 
 	public void render(Graphics2D g) {
 		// g.drawImage(imageLoader.imageLoader("./MAGE.png"), 0, 0, null);
-		//g.setColor(Color.black);
-		//g.drawLine(0, 20, 1280, 20);
-		// g.drawRect(x, y, 64, 64);
+		g.setColor(Color.black);
+		g.drawLine(0, 20, 1280, 20);
+		// g.drawRect(x + offSet, y, width, height);
 		// g.rotate(Math.toRadians(pointing), x + 16, y + 16);
-		//g.draw(playerB);
+		g.draw(playerB);
 		g.setColor(Color.red);
-		//g.draw(front);
+		g.draw(front);
 		if (front.intersects(screenTop)) {
 		//	System.out.println("yay");
 		}
@@ -299,7 +299,7 @@ public class Player {
 		g.setFont(new Font("Minecraft", Font.PLAIN, 10));
 		g.drawString("" + health, x, y);
 
-		//g.draw(playerShoot);
+		g.draw(playerShoot);
 
 	}
 
@@ -307,36 +307,36 @@ public class Player {
 		at = AffineTransform.getRotateInstance(Math.toRadians(pointing), x + 16, y + 16);
 		switch (pointing) {
 		case 1:
-			front.setBounds(x, y, 64, 1);
-			back.setBounds(x, y + 63, 64, 1);
-			left.setBounds(x, y, 1, 64);
-			right.setBounds(x + 63, y, 1, 64);
-			player.setLocation(x, y);
-			playerB.setLocation(x, y);
+			front.setBounds(x + offSet, y, width, 1);
+			back.setBounds(x + offSet, y + height - 1, width, 1);
+			left.setBounds(x + offSet, y, 1, height);
+			right.setBounds(x + width -1 , y, 1, height);
+			player.setLocation(x + offSet, y);
+			playerB.setLocation(x + offSet, y);
 			break;
 		case 2:
-			front.setBounds(x + 63, y, 1, 64);
-			back.setBounds(x, y, 1, 64);
-			left.setBounds(x, y, 64, 1);
-			right.setBounds(x, y + 63, 64, 1);
-			player.setLocation(x, y);
-			playerB.setLocation(x, y);
+			front.setBounds(x + width -1 , y, 1, height);
+			back.setBounds(x + offSet, y, 1, height);
+			left.setBounds(x + offSet, y, width, 1);
+			right.setBounds(x + offSet, y + height - 1, width, 1);
+			player.setLocation(x + offSet, y);
+			playerB.setLocation(x + offSet, y);
 			break;
 		case 3:
-			front.setBounds(x, y + 63, 64, 1);
-			back.setBounds(x, y, 64, 1);
-			left.setBounds(x + 63, y, 1, 64);
-			right.setBounds(x, y, 1, 64);
-			player.setLocation(x, y);
-			playerB.setLocation(x, y);
+			front.setBounds(x + offSet, y + height - 1, width, 1);
+			back.setBounds(x + offSet, y, width, 1);
+			left.setBounds(x + width -1 , y, 1, height);
+			right.setBounds(x + offSet, y, 1, height);
+			player.setLocation(x + offSet, y);
+			playerB.setLocation(x + offSet, y);
 			break;
 		case 4:
-			front.setBounds(x, y, 1, 64);
-			back.setBounds(x + 63, y, 1, 64);
-			left.setBounds(x, y + 63, 64, 1);
-			right.setBounds(x, y, 64, 1);
-			player.setLocation(x, y);
-			playerB.setLocation(x, y);
+			front.setBounds(x + offSet, y, 1, height);
+			back.setBounds(x + width -1 , y, 1, height);
+			left.setBounds(x + offSet, y + height - 1, width, 1);
+			right.setBounds(x + offSet, y, width, 1);
+			player.setLocation(x + offSet, y);
+			playerB.setLocation(x + offSet, y);
 			break;
 		}
 		
@@ -461,7 +461,7 @@ public class Player {
 				}
 			
 	
-		// if(player.getX() + 64 + speed > 1280 || player.getX() - speed < 0){
+		// if(player.getX() + width + speed > 1280 || player.getX() - speed < 0){
 		// motionX = 0;
 		// }
 		// System.out.println(x + ", " + y);
@@ -490,8 +490,6 @@ public class Player {
 				x += motionX;
 				y += motionY;
 				y += motionY;
-				motionX = motionX * -1;
-				motionY = motionY * -1;
 			}
 		}
 
@@ -503,8 +501,6 @@ public class Player {
 				x += motionX;
 				y += motionY;
 				y += motionY;
-				motionX = motionX * -1;
-				motionY = motionY * -1;
 			}
 		}
 		if (blocking == false) {

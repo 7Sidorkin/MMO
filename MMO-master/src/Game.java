@@ -119,7 +119,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 	public void run() {
 		init();
 		long lastTime = System.nanoTime();
-		final double numberOfTicks = 60.0;
+		final double numberOfTicks = 240.0;
 		double ns = 1000000000 / numberOfTicks;
 		double delta = 0;
 		int updates = 0;
@@ -365,12 +365,14 @@ public class Game implements Runnable, KeyListener, MouseListener,
 				break;
 			}
 
-		default:
-			Game.State = STATE.MENU;
-			break;
+		
 
 		case CHARACTERCREATE_NAME:
 			System.out.println(Game.State);
+			break;
+			
+		default:
+			Game.State = STATE.MENU;
 			break;
 		}
 	}
