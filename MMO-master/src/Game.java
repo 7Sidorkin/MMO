@@ -308,6 +308,12 @@ public class Game implements Runnable, KeyListener, MouseListener,
 
 				Game.State = STATE.CHARACTER_FACTION;
 			}
+			if(menu.quitButton.contains(mouse)){
+				System.exit(1);
+			}
+			if(menu.helpButton.contains(mouse)){
+				Game.State = STATE.CONTROLS;
+			}
 			break;
 
 		case CHARACTER:
