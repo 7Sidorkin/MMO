@@ -48,6 +48,10 @@ public class Game implements Runnable, KeyListener, MouseListener,
 	public static int winner;
 
 	public boolean playButton, helpButton, quitButton;
+
+	public int playerCount = 0;
+	
+	public int factionNum = 1;
 	
 	public static boolean powerUpB = false;
 
@@ -119,7 +123,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 	public void run() {
 		init();
 		long lastTime = System.nanoTime();
-		final double numberOfTicks = 60.0;
+		final double numberOfTicks = 240.0;
 		double ns = 1000000000 / numberOfTicks;
 		double delta = 0;
 		int updates = 0;
@@ -168,17 +172,17 @@ public class Game implements Runnable, KeyListener, MouseListener,
 			if (mouse.intersects(menu.playButton)) {
 				System.out.println("yay");
 				playButton = true;
-			}else{
+			} else {
 				playButton = false;
 			}
 			if (mouse.intersects(menu.helpButton)) {
 				helpButton = true;
-			}else{
+			} else {
 				helpButton = false;
 			}
 			if (mouse.intersects(menu.quitButton)) {
 				quitButton = true;
-			}else{
+			} else {
 				quitButton = false;
 			}
 		}
@@ -189,9 +193,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 			g.setColor(Color.BLACK);
 			g.fillRect(0, 0, WIDTH, HEIGHT);
 			menu.render(g);
-			
-			
-			
+
 		}
 		if (Game.State == STATE.CONTROLS) {
 			controls.render(g);
@@ -224,14 +226,13 @@ public class Game implements Runnable, KeyListener, MouseListener,
 
 	public static void main(String[] args) {
 
-		
-		 File file = new File ("./test.txt"); 
-		 try { 
-			 writer= new PrintWriter(file);
-			 } catch (FileNotFoundException e) { 
-		   e.printStackTrace(); }
-		  writer.println("test");
-		 
+		File file = new File("./test.txt");
+		try {
+			writer = new PrintWriter(file);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		writer.println("test");
 
 		// Creates new instance of Game
 
@@ -260,7 +261,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 		frame.addKeyListener(game);
 		frame.addMouseListener(game);
 		frame.addMouseMotionListener(game);
-		
+
 		// Makes the JFrame visible
 		frame.setVisible(true);
 		// Starts the instance
@@ -301,11 +302,11 @@ public class Game implements Runnable, KeyListener, MouseListener,
 				player2.x = 700;
 				player1.y = 100;
 				player2.y = 100;
-
 				player1.pointing = 0;
 				player2.pointing = 0;
+				playerCount = 0;
 
-				Game.State = STATE.CHARACTER;
+				Game.State = STATE.CHARACTER_FACTION;
 			}
 			break;
 
@@ -329,48 +330,101 @@ public class Game implements Runnable, KeyListener, MouseListener,
 			switch (Character.chosenFaction) {
 			case "moonshadow":
 				if (race.bMageRect.contains(mouse)) {
-					Game.State = STATE.CHARACTERCREATE_NAME;
+					playerCount++;
+					Game.State = STATE.CHARACTERCREATE_CLASS;
+					Character.chosenFaction = "blackguard";
 					Character.raceClass = "bmage";
 					System.out.println(Game.State + " " + Character.raceClass);
+					if (playerCount == 1) {
+						player1.setPlayerType(Player.PLAYERTYPE.MAGE, 2);
+					}
+					if (playerCount == 2) {
+						player2.setPlayerType(Player.PLAYERTYPE.MAGE, 2);
+						Game.State = STATE.GAME;
+					}
 
 				}
 				if (race.bHeavyRect.contains(mouse)) {
-					Game.State = STATE.CHARACTERCREATE_NAME;
+					playerCount++;
+					Game.State = STATE.CHARACTERCREATE_CLASS;
+					Character.chosenFaction = "blackguard";
 					Character.raceClass = "bheavy";
 					System.out.println(Game.State + " " + Character.raceClass);
-
+					if (playerCount == 1) {
+						player1.setPlayerType(Player.PLAYERTYPE.HEAVY, 2);
+					}
+					if (playerCount == 2) {
+						player2.setPlayerType(Player.PLAYERTYPE.HEAVY, 2);
+						Game.State = STATE.GAME;
+					}
 				}
 				if (race.bArcherRect.contains(mouse)) {
-					Game.State = STATE.CHARACTERCREATE_NAME;
+					playerCount++;
+					Game.State = STATE.CHARACTERCREATE_CLASS;
+					Character.chosenFaction = "blackguard";
 					Character.raceClass = "barcher";
 					System.out.println(Game.State + " " + Character.raceClass);
+					if (playerCount == 1) {
+						player1.setPlayerType(Player.PLAYERTYPE.ARCHER, 2);
+					}
+					if (playerCount == 2) {
+						player2.setPlayerType(Player.PLAYERTYPE.ARCHER, 2);
+						Game.State = STATE.GAME;
+					}
 				}
 				break;
 			case "blackguard":
 				if (race.rMageRect.contains(mouse)) {
-					Game.State = STATE.CHARACTERCREATE_NAME;
+					playerCount++;
+					Game.State = STATE.CHARACTERCREATE_CLASS;
+					Character.chosenFaction = "moonshadow";
 					Character.raceClass = "rmage";
 					System.out.println(Game.State + " " + Character.raceClass);
+					if (playerCount == 1) {
+						player1.setPlayerType(Player.PLAYERTYPE.MAGE, 1);
+					}
+					if (playerCount == 2) {
+						player2.setPlayerType(Player.PLAYERTYPE.MAGE, 1);
+						Game.State = STATE.GAME;
+					}
 				}
 				if (race.rHeavyRect.contains(mouse)) {
-					Game.State = STATE.CHARACTERCREATE_NAME;
+					playerCount++;
+					Game.State = STATE.CHARACTERCREATE_CLASS;
+					Character.chosenFaction = "moonshadow";
 					Character.raceClass = "rheavy";
 					System.out.println(Game.State + " " + Character.raceClass);
+					if (playerCount == 1) {
+						player1.setPlayerType(Player.PLAYERTYPE.HEAVY, 1);
+					}
+					if (playerCount == 2) {
+						player2.setPlayerType(Player.PLAYERTYPE.HEAVY, 1);
+						Game.State = STATE.GAME;
+					}
 				}
 				if (race.rArcherRect.contains(mouse)) {
-					Game.State = STATE.CHARACTERCREATE_NAME;
+					playerCount++;
+					Game.State = STATE.CHARACTERCREATE_CLASS;
+					Character.chosenFaction = "moonshadow";
 					Character.raceClass = "rarcher";
 					System.out.println(Game.State + " " + Character.raceClass);
+					if (playerCount == 1) {
+						player1.setPlayerType(Player.PLAYERTYPE.ARCHER, 1);
+					}
+					if (playerCount == 2) {
+						player2.setPlayerType(Player.PLAYERTYPE.ARCHER, 1);
+						Game.State = STATE.GAME;
+					}
 				}
 				break;
 			}
 
-		default:
-			Game.State = STATE.MENU;
-			break;
-
 		case CHARACTERCREATE_NAME:
 			System.out.println(Game.State);
+			break;
+
+		default:
+			Game.State = STATE.MENU;
 			break;
 		}
 	}

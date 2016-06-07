@@ -5,7 +5,7 @@ import java.awt.image.BufferedImage;
 
 
 public class Projectile extends GameObject {
-	int speed = 10;
+	int speed = 5;
 	int numTick = 0;
 	int damage = 10;
 	private Rectangle arrow;
@@ -22,7 +22,7 @@ public class Projectile extends GameObject {
 		reader = new SpriteSheetReader();
 		this.player = player;
 		if (player.type == Player.PLAYERTYPE.MAGE) {
-			this.speed = 7;
+			this.speed = 2;
 			this.damage = 15;
 			if (this.id == ID.Mage_Ability) {
 				this.damage = 30;
@@ -33,7 +33,7 @@ public class Projectile extends GameObject {
 			}
 		}
 		if (player.type == Player.PLAYERTYPE.HEAVY) {
-			this.speed = 10;
+			this.speed = 5;
 			this.damage = 25;
 		}
 		switch (player.pointing) {
@@ -73,11 +73,11 @@ public class Projectile extends GameObject {
 				Game.game.handler.removeObject(this);
 			}
 		} else if (this.id == ID.Melee) {
-			if (this.numTick > 1) {
+			if (this.numTick > 2) {
 				Game.game.handler.removeObject(this);
 			}
 		} else if (this.id == ID.Mage_Ability || player.detonate) {
-			if (this.numTick > 65 || player.detonate) {
+			if (this.numTick > 130 || player.detonate) {
 				this.motionX = 0;
 				this.motionY = 0;
 				this.animate = true;

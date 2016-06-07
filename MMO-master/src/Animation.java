@@ -9,6 +9,8 @@ public class Animation {
 	private int index = 0;
 	private int count = 0;
 	
+	public int tickOff = 4;
+	
 	private BufferedImage img1;
 	private BufferedImage img2;
 	private BufferedImage img3;
@@ -28,7 +30,7 @@ public class Animation {
 	private BufferedImage currentImg;
 	
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7, BufferedImage img8, BufferedImage img9, BufferedImage img10, BufferedImage img11, BufferedImage img12, BufferedImage img13, BufferedImage img14, BufferedImage img15){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -48,7 +50,7 @@ public class Animation {
 	}
 	//13 frame animation
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7, BufferedImage img8, BufferedImage img9, BufferedImage img10, BufferedImage img11, BufferedImage img12, BufferedImage img13, BufferedImage img14){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -67,7 +69,7 @@ public class Animation {
 	}
 	//13 frame animation
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7, BufferedImage img8, BufferedImage img9, BufferedImage img10, BufferedImage img11, BufferedImage img12, BufferedImage img13){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -85,7 +87,7 @@ public class Animation {
 		}
 	//12 frame animation
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7, BufferedImage img8, BufferedImage img9, BufferedImage img10, BufferedImage img11, BufferedImage img12){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -102,7 +104,7 @@ public class Animation {
 	}
 	//11 frame animation
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7, BufferedImage img8, BufferedImage img9, BufferedImage img10, BufferedImage img11){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -118,7 +120,7 @@ public class Animation {
 	}
 	//10 frame animation
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7, BufferedImage img8, BufferedImage img9, BufferedImage img10){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -133,7 +135,7 @@ public class Animation {
 	}
 	// 9 frame
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7, BufferedImage img8, BufferedImage img9){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -147,7 +149,7 @@ public class Animation {
 	}
 	//8 frame
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7, BufferedImage img8){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -160,7 +162,7 @@ public class Animation {
 	}
 	//7 frame
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6, BufferedImage img7){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -172,7 +174,7 @@ public class Animation {
 	}
 	//6 frame
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5, BufferedImage img6){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -183,7 +185,7 @@ public class Animation {
 	}
 	//5 frame
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4, BufferedImage img5){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -193,7 +195,7 @@ public class Animation {
 	}
 	//4 frame
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3, BufferedImage img4){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -202,7 +204,7 @@ public class Animation {
 	}
 	//3 frame
 	public Animation(int speed, BufferedImage img1, BufferedImage img2, BufferedImage img3){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		this.img3 = img3;
@@ -210,7 +212,7 @@ public class Animation {
 	}
 	//2 frame
 	public Animation(int speed, BufferedImage img1, BufferedImage img2){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 		this.img1 = img1;
 		this.img2 = img2;
 		frames = 2;
@@ -595,7 +597,7 @@ public class Animation {
 		return speed;
 	}
 	public void setSpeed(int speed){
-		this.speed = speed;
+		this.speed = speed * tickOff;
 	}
 	
 }
