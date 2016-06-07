@@ -1,0 +1,15 @@
+static void PlayMusic(File Sound){
+		try{
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(Sound));
+			FloatControl gainControl = 
+			(FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			gainControl.setValue(-40.0f); // Reduce volume by 40 decibels.
+			clip.start();
+			
+			Thread.sleep(50);
+		}catch(Exception e)
+		{
+		}
+	}
+	
