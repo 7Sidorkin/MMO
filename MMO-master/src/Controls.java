@@ -6,7 +6,7 @@ public class Controls {
 	public BufferedImage controls;
 	public BufferedImage controlsBack;
 	Controls(){
-		controls = imageLoader.imageLoader("./keyboardControls.png");
+		controls = imageLoader.imageLoader("./MMO-master/keyboardControls.png");
 		controlsBack = imageLoader.imageLoader("./menuBackground.png");
 	}
 
