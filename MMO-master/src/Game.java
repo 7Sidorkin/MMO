@@ -13,6 +13,9 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.Random;
 
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.JFrame;
 
 public class Game implements Runnable, KeyListener, MouseListener,
@@ -50,15 +53,21 @@ public class Game implements Runnable, KeyListener, MouseListener,
 	public boolean playButton, helpButton, quitButton;
 
 	public int playerCount = 0;
-	
+
 	public int factionNum = 1;
-	
+
 	public static boolean powerUpB = false;
 
 	public static BufferedImage background;
 
 	public BufferedImage rMage, rArcher, rHeavy, bMage, bHeavy, bArcher;
 
+	public File music = new File("./backgroundMusic.wav");
+
+	public File moonWalk = new File("./moonWalk.wav");
+
+	public int musicTime = 2400;
+	
 	private BufferedImage images = new BufferedImage(WIDTH, HEIGHT,
 			BufferedImage.TYPE_INT_RGB);
 
@@ -92,6 +101,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 				.imageLoader("./MMO-master/src/grahpics/arenaSet.jpg");
 		race = new CharacterClass();
 		characterFinal = new CharacterFinal();
+		PlayMusic(music);
 	}
 
 	public Game() {
@@ -123,7 +133,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 	public void run() {
 		init();
 		long lastTime = System.nanoTime();
-		final double numberOfTicks = 240.0;
+		final double numberOfTicks = 120.0;
 		double ns = 1000000000 / numberOfTicks;
 		double delta = 0;
 		int updates = 0;
@@ -160,6 +170,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 		handler.tick();
 		powerTicks++;
 		powerTicks++;
+		musicTime++;
 		if (powerTicks > powerUpTick && powerUpB == false) {
 			powerUp powerUp = new powerUp(random.nextInt(1280),
 					random.nextInt(720), ID.PowerUp);
@@ -185,6 +196,30 @@ public class Game implements Runnable, KeyListener, MouseListener,
 			} else {
 				quitButton = false;
 			}
+		}
+		
+		if ((player1.pointing == 1 && player1.motionY > 0)
+				|| (player1.pointing == 2 && player1.motionX < 0)
+				|| (player1.pointing == 3 && player1.motionY < 0)
+				|| (player1.pointing == 14 && player1.motionX > 0)) {
+			if(musicTime > 660){
+				PlaySound(moonWalk);
+				musicTime = 0;
+			}
+			
+			
+
+		}
+
+		if ((player2.pointing == 1 && player2.motionY > 0)
+				|| (player2.pointing == 2 && player2.motionX < 0)
+				|| (player2.pointing == 3 && player2.motionY < 0)
+				|| (player2.pointing == 14 && player2.motionX > 0)) {
+			if(musicTime > 660){
+				PlaySound(moonWalk);
+				musicTime = 0;
+			}
+
 		}
 	}
 
@@ -218,9 +253,10 @@ public class Game implements Runnable, KeyListener, MouseListener,
 
 		}
 		if (Game.State == STATE.WIN) {
+			g.drawImage(background, 0, 0, 1280, 720, null);
 			g.setFont(new Font("Minecraft", Font.PLAIN, 93));
 			g.setColor(Color.BLACK);
-			g.drawString("Player" + Game.winner + " WINS", 0, 100);
+			g.drawString("Player" + Game.winner + " WINS", 350, 300);
 		}
 	}
 
@@ -308,10 +344,10 @@ public class Game implements Runnable, KeyListener, MouseListener,
 
 				Game.State = STATE.CHARACTER_FACTION;
 			}
-			if(menu.quitButton.contains(mouse)){
+			if (menu.quitButton.contains(mouse)) {
 				System.exit(1);
 			}
-			if(menu.helpButton.contains(mouse)){
+			if (menu.helpButton.contains(mouse)) {
 				Game.State = STATE.CONTROLS;
 			}
 			break;
@@ -461,4 +497,29 @@ public class Game implements Runnable, KeyListener, MouseListener,
 		mouse.setLocation(e.getX(), e.getY());
 
 	}
+
+	static void PlayMusic(File Sound) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(Sound));
+
+			clip.loop(clip.LOOP_CONTINUOUSLY);
+		} catch (Exception e) {
+			System.out.println("help");
+			e.printStackTrace();
+		}
+	}
+
+	static void PlaySound(File Sound) {
+		try {
+			Clip clip = AudioSystem.getClip();
+			clip.open(AudioSystem.getAudioInputStream(Sound));
+			
+			clip.start();
+		} catch (Exception e) {
+			System.out.println("help");
+			e.printStackTrace();
+		}
+	}
+
 }
