@@ -1,0 +1,81 @@
+		if(motionX == 0 && motionY == 0){
+			moveDir = moveDirection.NONE;
+		}else if(motionX < 0 && motionY == 0){
+			moveDir = moveDirection.LEFT;
+		} else if(motionX > 0 && motionY == 0){
+			moveDir = moveDirection.RIGHT;
+		} else if(motionX == 0 && motionY < 0){
+			moveDir = moveDirection.UP;
+		} else if(motionX == 0 && motionY > 0){
+			moveDir = moveDirection.DOWN;
+		}else if(motionX < 0 && motionY < 0){
+			moveDir = moveDirection.UP_LEFT;
+		}else if(motionX < 0 && motionY > 0){
+			moveDir = moveDirection.DOWN_LEFT;
+		}else if(motionX > 0 && motionY < 0){
+			moveDir = moveDirection.UP_RIGHT;
+		}else if(motionX > 0 && motionY > 0){
+			moveDir = moveDirection.DOWN_RIGHT;
+		}
+		if(playerNum == 1){
+			switch(moveDir){
+			case NONE:
+				
+				break;
+			case UP:
+				if(playerB.intersects(Game.game.player2.back)){
+					y += 10;
+				} 
+				break;
+			case DOWN:
+				if(playerB.intersects(Game.game.player2.front)){
+					y -= 10;
+				} 
+				break;
+			case LEFT:
+				if(playerB.intersects(Game.game.player2.right)){
+					x += 10;
+				} 
+				break;
+			case RIGHT:
+				if(playerB.intersects(Game.game.player2.left)){
+					x -= 10;
+				} 
+				break;
+			case UP_RIGHT:
+				if(playerB.intersects(Game.game.player2.left)){
+					x -= 10;
+					
+				} else if(playerB.intersects(Game.game.player2.back)){
+					
+					y += 10;
+				}
+				break;
+			case UP_LEFT:
+				if(playerB.intersects(Game.game.player2.right)){
+					x += 10;
+					
+				} else if(playerB.intersects(Game.game.player2.back)){
+					y += 10;
+				}
+				break;
+			case DOWN_RIGHT:
+				if(playerB.intersects(Game.game.player2.left)){
+					x -= 10;
+					
+				} else if(playerB.intersects(Game.game.player2.front)){
+					
+					y -= 10;
+				}
+				break;
+			case DOWN_LEFT:
+				if(playerB.intersects(Game.game.player2.right)){
+					x += 10;
+					
+				} else if(playerB.intersects(Game.game.player2.front)){
+					
+					y -= 10;
+				}
+				break;
+			}
+		}
