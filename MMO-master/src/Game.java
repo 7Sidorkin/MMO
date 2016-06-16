@@ -7,6 +7,7 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -36,11 +37,13 @@ public class Game implements Runnable, KeyListener, MouseListener,
 	public static CharacterFaction createFaction;
 	public static CharacterFinal characterFinal;
 
-	public static int powerUpTick = 2700;
+	public static int powerUpTick = 2700;// was 2700
 
 	public static Random random;
 
-	public int powerTicks = 2700;
+	public int powerTicks = 1000;
+
+	public int badTicks1 = 0, badTicks2 = 0;
 
 	public static Game game;
 	public Rectangle mouse;
@@ -67,7 +70,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 	public File moonWalk = new File("./moonWalk.wav");
 
 	public int musicTime = 2400;
-	
+
 	private BufferedImage images = new BufferedImage(WIDTH, HEIGHT,
 			BufferedImage.TYPE_INT_RGB);
 
@@ -172,9 +175,15 @@ public class Game implements Runnable, KeyListener, MouseListener,
 		powerTicks++;
 		musicTime++;
 		if (powerTicks > powerUpTick && powerUpB == false) {
-			powerUp powerUp = new powerUp(random.nextInt(1280),
-					random.nextInt(720), ID.PowerUp);
-			this.handler.addObject(powerUp);
+			if (random.nextInt(2) == 0) {
+				powerUp powerUp = new powerUp(random.nextInt(1200),
+						random.nextInt(700), ID.PowerUp);
+				this.handler.addObject(powerUp);
+			} else {
+				powerUp powerUp = new powerUp(random.nextInt(1280),
+						random.nextInt(720), ID.Speed);
+				this.handler.addObject(powerUp);
+			}
 			powerUpB = true;
 			powerTicks = 0;
 			System.out.println("should be spawning");
@@ -197,29 +206,30 @@ public class Game implements Runnable, KeyListener, MouseListener,
 				quitButton = false;
 			}
 		}
-		
+
 		if ((player1.pointing == 1 && player1.motionY > 0)
 				|| (player1.pointing == 2 && player1.motionX < 0)
 				|| (player1.pointing == 3 && player1.motionY < 0)
 				|| (player1.pointing == 14 && player1.motionX > 0)) {
-			if(musicTime > 660){
-				PlaySound(moonWalk);
-				musicTime = 0;
-			}
-			
-			
 
+			badTicks1++;
 		}
 
 		if ((player2.pointing == 1 && player2.motionY > 0)
 				|| (player2.pointing == 2 && player2.motionX < 0)
 				|| (player2.pointing == 3 && player2.motionY < 0)
 				|| (player2.pointing == 14 && player2.motionX > 0)) {
-			if(musicTime > 660){
-				PlaySound(moonWalk);
-				musicTime = 0;
-			}
-
+			badTicks2++;
+		}
+		if(badTicks1 > 60){
+			player1.motionX = 0;
+			player1.motionY = 0;
+			badTicks1 = 0;
+		}
+		if(badTicks2 > 60){
+			player2.motionX = 0;
+			player2.motionY = 0;
+			badTicks2 = 0;
 		}
 	}
 
@@ -238,6 +248,51 @@ public class Game implements Runnable, KeyListener, MouseListener,
 			game.player1.render(g);
 			game.player2.render(g);
 			game.handler.render(g);
+			g.setFont(new Font("Arial", 1, 20));
+			if(game.player1.faction == 1){g.setColor(Color.red);}else{g.setColor(Color.blue);}
+			g.drawString("Player 1", 0, 20);
+			g.fillRect(0, 20, (int) (((game.player1.health / game.player1.maxHealth) * 100) *2), 20);
+			//System.out.println((game.player1.health / game.player1.maxHealth) * 100);
+			float tack1width = (System.currentTimeMillis() - game.player1.tack1Start)/ game.player1.cool1;
+			if( tack1width * 100 > 99){
+				g.drawString("Attack Ready", 0, 60);
+			}
+			if(game.player1.type != Player.PLAYERTYPE.HEAVY){
+			float tack2width = (System.currentTimeMillis() - game.player1.tack2Start)/ game.player1.cool2;
+			if( tack2width * 100 > 99){
+				g.drawString("Ability 1 Ready", 0, 80);
+			}
+			}
+			float tack3width = (System.currentTimeMillis() - game.player1.tack3Start)/ game.player1.cool3;
+			if( tack3width * 100 > 99){
+				g.drawString("Ability 2 Ready", 0, 100);
+			}
+			if (game.player1.speed > 2){
+				g.drawString("Speed Boost", 0, 120);
+			}
+			if(game.player2.faction == 1){g.setColor(Color.red);}else{g.setColor(Color.blue);}
+			float tack1width2 = (System.currentTimeMillis() - game.player2.tack1Start)/ game.player2.cool1;
+			if( tack1width2 * 100 > 99){
+				g.drawString("Attack Ready", 1080, 60);
+			}
+			if(game.player2.type != Player.PLAYERTYPE.HEAVY){
+			float tack2width2 = (System.currentTimeMillis() - game.player2.tack2Start)/ game.player2.cool2;
+			if( tack2width2 * 100 > 99){
+				g.drawString("Ability 1 Ready", 1080, 80);
+			}
+			}
+			float tack3width2 = (System.currentTimeMillis() - game.player2.tack3Start)/ game.player2.cool3;
+			if( tack3width2 * 100 > 99){
+				g.drawString("Ability 2 Ready",1080, 100);
+			}
+			if (game.player2.speed > 2){
+				g.drawString("Speed Boost", 1080, 120);
+			}
+			g.setFont(new Font("Arial", 1, 20));
+			g.drawString("Player 2", 1080, 20);
+			g.fillRect(1080, 20, (int) (((game.player2.health / game.player2.maxHealth) * 100) *2), 20);
+			
+			
 		}
 		if (Game.State == STATE.CHARACTER) {
 			Game.character.render(g);
@@ -465,9 +520,6 @@ public class Game implements Runnable, KeyListener, MouseListener,
 			System.out.println(Game.State);
 			break;
 
-		default:
-			Game.State = STATE.MENU;
-			break;
 		}
 	}
 
@@ -514,7 +566,7 @@ public class Game implements Runnable, KeyListener, MouseListener,
 		try {
 			Clip clip = AudioSystem.getClip();
 			clip.open(AudioSystem.getAudioInputStream(Sound));
-			
+
 			clip.start();
 		} catch (Exception e) {
 			System.out.println("help");

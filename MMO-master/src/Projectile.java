@@ -22,7 +22,7 @@ public class Projectile extends GameObject {
 		reader = new SpriteSheetReader();
 		this.player = player;
 		if (player.type == Player.PLAYERTYPE.MAGE) {
-			this.speed = 2;
+			this.speed = 3;
 			this.damage = 15;
 			if (this.id == ID.Mage_Ability) {
 				this.damage = 30;
@@ -30,6 +30,9 @@ public class Projectile extends GameObject {
 				boom = reader.getSprites(15, imageLoader.imageLoader("./MMO-master/src/grahpics/boom.png"));
 				boomA = new Animation(4, boom[0], boom[1], boom[2], boom[3], boom[4], boom[5], boom[6], boom[7], boom[8], boom[9], boom[10], boom[11], boom[12], boom[13], boom[14]);
 				this.boomA.runAnimation();
+			}if (this.id == ID.MAge_Ability2){
+				this.speed = 8;
+				this.damage = 7;
 			}
 		}
 		if (player.type == Player.PLAYERTYPE.HEAVY) {
@@ -68,16 +71,16 @@ public class Projectile extends GameObject {
 		this.y += this.motionY;
 		this.numTick++;
 
-		if (this.id == ID.Arrow || this.id == ID.magic) {
+		if (this.id == ID.Arrow ) {
 			if (this.numTick > 65) {
 				Game.game.handler.removeObject(this);
 			}
 		} else if (this.id == ID.Melee) {
-			if (this.numTick > 2) {
+			if (this.numTick > 4) {
 				Game.game.handler.removeObject(this);
 			}
-		} else if (this.id == ID.Mage_Ability || player.detonate) {
-			if (this.numTick > 130 || player.detonate) {
+		} else if (this.id == ID.Mage_Ability && player.detonate) {
+			if (this.numTick > 65 || player.detonate) {
 				this.motionX = 0;
 				this.motionY = 0;
 				this.animate = true;
@@ -93,6 +96,18 @@ public class Projectile extends GameObject {
 						Game.game.player2.health -= 50;
 					}
 				}
+			}
+		} else if(this.id == ID.Heavy_Ability){
+			if (this.numTick > 8) {
+				Game.game.handler.removeObject(this);
+			}
+		}else if(this.id == ID.magic){
+			if (this.numTick > 130) {
+				Game.game.handler.removeObject(this);
+			}
+		}else if (this.id == ID.MAge_Ability2){
+			if (this.numTick > 65) {
+				Game.game.handler.removeObject(this);
 			}
 		}
 		this.arrow.setLocation(this.x, this.y);
