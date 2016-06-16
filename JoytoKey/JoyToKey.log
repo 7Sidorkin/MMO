@@ -1,0 +1,48 @@
+2016/06/16 08:52:46.567 Info   Starting JoyToKey Ver5.8.2
+2016/06/16 08:52:46.567 Info   ExeFile=C:\Users\owen7900\Desktop\JoyToKey_en\JoyToKey.exe
+2016/06/16 08:52:46.567 Info   ConfigDir=C:\Users\owen7900\Desktop\JoyToKey_en\
+2016/06/16 08:52:46.567 Info   IniFile=C:\Users\owen7900\Desktop\JoyToKey_en\JoyToKey.ini
+2016/06/16 08:52:46.567 Info   Windows Version = 6.2
+2016/06/16 08:52:46.568 Info   Loaded VistaAPI.dll (Utils\Utils.cpp#217)
+2016/06/16 08:52:46.568 Info   LicenseKey "" is not valid
+2016/06/16 08:52:46.929 Info   Loading XInput1_3.dll (Joystick.cpp#126)
+2016/06/16 08:52:46.938 Error  Could not load XInput1_3.dll. Trying to load XInput1_4.dll... (Joystick.cpp#130)
+2016/06/16 08:52:46.946 Info   Initialized XInput (Joystick.cpp#144)
+2016/06/16 08:52:47.285 Info   0 joysticks are detected (Joystick.cpp#166)
+2016/06/16 08:52:47.286 Info   ConfigDir=C:\Users\owen7900\Desktop\JoyToKey_en\*.cfg (ConfigFileManager.cpp#43)
+2016/06/16 08:52:47.287 Info   Failed to find AppLink.dat (AppLink\AppLinkManager.cpp#32)
+2016/06/16 08:52:47.336 Info   TimerInit: Initializing timer with x1 speed mode (interval = 16 msec)
+6/16/2016 8:56:16 AM Info   Detected a DI joystick: {2EAC5A50-33A0-11E6-8007-444553540000}, Logitech Dual Action, Logitech Dual Action
+6/16/2016 8:56:16 AM Info   Preferred index = -1
+6/16/2016 8:56:16 AM Info   numAxis = 4
+6/16/2016 8:56:16 AM Info   numPOVs = 1
+6/16/2016 8:56:16 AM Info   numButtons = 12
+6/16/2016 8:56:16 AM Info   EnumDeviceObject: Axis offset=0 type=502 name=Z Rotation
+6/16/2016 8:56:16 AM Info   EnumDeviceObject: Axis offset=4 type=202 name=Z Axis
+6/16/2016 8:56:16 AM Info   EnumDeviceObject: Axis offset=8 type=102 name=Y Axis
+6/16/2016 8:56:16 AM Info   EnumDeviceObject: Axis offset=12 type=2 name=X Axis
+6/16/2016 8:56:16 AM Info   DetectJoysticks: Detected 1 DI joystick(s)
+6/16/2016 8:56:16 AM Info   Joystick #1: Logitech Dual Action
+6/16/2016 9:00:16 AM Info   Save config file "Profile 1" (ConfigFileManager.cpp#407)
+6/16/2016 9:02:09 AM Info   Detected a DI joystick: {2EAC5A50-33A0-11E6-8007-444553540000}, Logitech Dual Action, Logitech Dual Action
+6/16/2016 9:02:09 AM Info   Preferred index = -1
+6/16/2016 9:02:09 AM Info   numAxis = 4
+6/16/2016 9:02:09 AM Info   numPOVs = 1
+6/16/2016 9:02:09 AM Info   numButtons = 12
+6/16/2016 9:02:09 AM Info   EnumDeviceObject: Axis offset=0 type=502 name=Z Rotation
+6/16/2016 9:02:09 AM Info   EnumDeviceObject: Axis offset=4 type=202 name=Z Axis
+6/16/2016 9:02:09 AM Info   EnumDeviceObject: Axis offset=8 type=102 name=Y Axis
+6/16/2016 9:02:09 AM Info   EnumDeviceObject: Axis offset=12 type=2 name=X Axis
+6/16/2016 9:02:09 AM Info   Detected a DI joystick: {00F33970-33A1-11E6-8008-444553540000}, Logitech Dual Action, Logitech Dual Action
+6/16/2016 9:02:09 AM Info   Preferred index = -1
+6/16/2016 9:02:09 AM Info   numAxis = 4
+6/16/2016 9:02:09 AM Info   numPOVs = 1
+6/16/2016 9:02:09 AM Info   numButtons = 12
+6/16/2016 9:02:09 AM Info   EnumDeviceObject: Axis offset=0 type=502 name=Z Rotation
+6/16/2016 9:02:09 AM Info   EnumDeviceObject: Axis offset=4 type=202 name=Z Axis
+6/16/2016 9:02:09 AM Info   EnumDeviceObject: Axis offset=8 type=102 name=Y Axis
+6/16/2016 9:02:09 AM Info   EnumDeviceObject: Axis offset=12 type=2 name=X Axis
+6/16/2016 9:02:09 AM Info   DetectJoysticks: Detected 2 DI joystick(s)
+6/16/2016 9:02:09 AM Info   Joystick #1: Logitech Dual Action
+6/16/2016 9:02:09 AM Info   Joystick #2: Logitech Dual Action
+6/16/2016 9:03:44 AM Info   Save config file "Profile 1" (ConfigFileManager.cpp#407)
